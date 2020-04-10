@@ -11,8 +11,43 @@
 <details>
 <summary>Day1: 学习CTF-Wiki有关Linux平台漏洞利用技术</summary>
 
-传送门: [Linux Pwn](https://ctf-wiki.github.io/ctf-wiki/pwn/readme-zh/)
+传送门: [CTF Wiki: Linux Pwn](https://ctf-wiki.github.io/ctf-wiki/pwn/readme-zh/)
 
+- [x] [Stack Overflow Principle](https://ctf-wiki.github.io/ctf-wiki/pwn/linux/stackoverflow/stackoverflow-basic-zh/): 通过栈溢出覆盖掉函数栈帧的返回地址, 当函数返回时就会跳入攻击者覆写的地址继续执行代码. 
+    1. 确认溢出的长度可以到达栈帧返回地址
+    2. 确认没有开启Stack Canary
+    3. 确认覆写的地址所在的段具有执行权限
+    * 编译选项`-fno-stack-protector`用于关闭Stack Canary
+    * 编译时需要加`-no-pie`确保不会生成位置无关文件
+    *  关闭ASLR: `echo 0 > /proc/sys/kernel/randomize_va_space`
+- [x] [Basic ROP](https://ctf-wiki.github.io/ctf-wiki/pwn/linux/stackoverflow/basic-rop-zh/): 在栈溢出的基础上, 通过利用文件本身的gadget来控制寄存器和变量来控制程序流程.
+    - [x] ret2text: 跳转到程序已有的高危代码处(`system("/bin/sh")`), 直接触发高危操作.
+    - [x] ret2shellcode: 栈溢出的同时布置shellcode(可以理解为预写好的高危功能性汇编代码), 在溢出时跳转到布置好的shellcode处继续执行.
+        1. 因为有执行, 所以需要确保shellcode所在位置有可执行权限.
+        2. gef的`vmmap`可以查看内存段的权限.
+        3. pwntool获取shellcode: `asm(shellcraft.sh())`
+    - [x] ret2syscall: 没有执行权限时, 可以通过系统调用来实现控制. 
+        1. 开启NX保护后, 再如何部署高危代码都没法执行. 所以需要转向利用内核的系统调用实现高危操作. 
+        2. 可以通过`/usr/include/asm/unistd_32.h`查看当前内核对应的系统调用号. 比如`#define __NR_execve 11`, 也就是`execve`的系统调用号为`0xb`
+        3. 使用`ROPgadget`可用获取寄存器和字符串的gadget.
+           * `ROPgadget --binary rop  --only 'pop|ret' | grep 'ebx' | grep 'ecx'`
+           * `ROPgadget --binary rop  --string '/bin/sh'`
+           * `ROPgadget --binary rop  --only 'int'`
+        4. 使用`flat`来直观地表示ROP链: `flat(['A' * 112, pop_eax_ret, 0xb, pop_edx_ecx_ebx_ret, 0, 0, binsh, int_0x80])` 
+           * 形式为: `溢出用的填充数据, gadget1(函数原本的返回地址), value1, gadget2, value2, ... , int 0x80`  
+    - [x] ret2libc: 
+        - [x] ret2libc1: 跳转到libc的高危代码(`system`)并模拟函数调用
+            1. 注意跳转到libc的函数去执行, 需要模拟函数调用, 因此跟gadget在栈上的部署方式不一样, 正确的形式为`PLT地址, 函数返回地址, 函数参数地址...`
+            2. 获取`system()`的plt地址方法: `objdump -d ret2libc1 | grep system`, 也就是地址是写在汇编里的.
+        - [x] ret2libc2: 如果缺少函数调用的条件(缺少函数参数字符串`/bin/sh`)
+            1. 利用libc里的`gets`函数, 并手动输入相应的函数参数字符串即可弥补.
+            2. `['a' * 112, gets_plt, pop_ebx, buf2, system_plt, 0xdeadbeef, buf2]`需要注意的是`pop_ebx`作为`gets`的返回地址, 它还将buf2给弹出栈, 使得程序继续向下执行`system`函数部分.
+        - [x] ret2libc3: 既没有函数参数字符串(`/bin/sh`)也没有高危libc函数地址(`system`)
+            1. libc之间函数偏移是固定的, 因此可以通过某个已知的libc函数偏移, 来获取任意其他libc函数地址. 
+            2. libc有延迟绑定机制, 只有执行过的函数它的GOT才是正确的. 
+            3. libc内自带有`/bin/sh`字符串. 
+            4. 可以利用`__libc_start_main`地址来泄露偏移.
+            5. 利用思路就是 => 构造ROP链通过`puts`泄露`__libc_start_main`的got地址 => 使用`LibcSearcher`获取libc的基址从而获取`system`地址和`/bin/sh`地址 => 重载程序 => 构造payload控制.
 </details>
 
 ## 相关资源
