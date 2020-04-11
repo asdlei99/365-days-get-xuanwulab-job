@@ -51,7 +51,7 @@
 </details>
 
 <details>
-<summary>Day2: 学习CTF Wiki中高级ROP</summary>
+<summary>Day2: 学习CTF Wiki中级ROP和格式化字符串漏洞</summary>
 
 > 传送门: [CTF Wiki: Linux Pwn](https://ctf-wiki.github.io/ctf-wiki/pwn/readme-zh/)
 
@@ -113,7 +113,7 @@
            sleep(1)
         ```
         </details>
-    - [x] BROP: 盲打的方式通过程序是否崩溃来推测信息. 适用于Nginx, MySQL, Apache, OpenSSH等服务器应用, 因此该攻击还有着一定的实际应用价值.
+    - [x] [BROP](https://ctf-wiki.github.io/ctf-wiki/pwn/linux/stackoverflow/medium-rop-zh/#brop): 盲打的方式通过程序是否崩溃来推测信息. 适用于Nginx, MySQL, Apache, OpenSSH等服务器应用, 因此该攻击还有着一定的实际应用价值.
         > 理论知识主要参考 [Blind Return Oriented Programming (BROP) Attack-攻击原理](https://wooyun.js.org/drops/Blind%20Return%20Oriented%20Programming%20(BROP)%20Attack%20-%20%E6%94%BB%E5%87%BB%E5%8E%9F%E7%90%86.html), 示例程序参考 [HCTF2016-出题人失踪了(brop)](https://github.com/ctf-wiki/ctf-challenges/tree/master/pwn/stackoverflow/brop/hctf2016-brop)
         * 实现攻击必需的2个条件:
             1. 存在栈溢出漏洞, 且攻击者可以通过输入轻松触发. (没有程序没有源码没有信息, 打也打不崩, 那还玩什么)
@@ -142,6 +142,15 @@
                * 寻找`/bin/sh`, 或者利用`write`写入到某块内存.
                * 执行`execve`或构造系统调用. 
                * 泄露`puts`在内存的实际地址, 然后确认libc基址, 获取`system`地址并构造rop链.
+- [x] [Format String Vulnerability](https://ctf-wiki.github.io/ctf-wiki/pwn/linux/fmtstr/fmtstr_intro-zh/):
+    * 格式化字符串漏洞的本质在于信任了用户的输入, 攻击者通过输入构造好的格式化字符串来泄露栈上的内存数据.
+        * `%x`或`%p`用于泄露栈内存数据.
+        * `%s`用于泄露变量对应地址的内容, 存在`\x00`截断.
+        * `%n$x`用于泄露输出函数的第`n+1`个参数. 这里的`n`是相对于格式化字符串而言的. 
+    * 可以通过`func@plt%N$s`将内存中的`func`实际地址泄露出来. `N`表示其在栈上相对格式化字符串而言是第`N`个参数.
+    * 确定了偏移后, 使用`...[overwrite addr]....%[overwrite offset]$n`. `%n`写入的值可通过增加输出的字符数量进行调整.
+    * 覆写的地址没有位置的要求, 只需要找到对应偏移即可. 
+    * 利用`%hhn`进行单字节写入, `%hn`进行双字节写入.
 </details>
 
 
