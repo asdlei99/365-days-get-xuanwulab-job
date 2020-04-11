@@ -67,6 +67,17 @@
         2. 泄露函数地址后获取libc基址, 然后获取`execve`地址
         3. 利用csu执行`read()`向bss段写入`execve`地址和参数`/bin/sh`
         4. 利用csu执行`execve(/bin/sh)`
+
+        <details>
+        <summary>Q1: 为什么要先<code>read()</code>写<code>execve</code>地址, 而不是直接调用<code>execve</code>函数呢?</summary>
+        因为<code>call qword ptr [r12+rbx*8]</code>指令, 实际上我们通过csu控制的是一个地址, 而该地址指向的内容才是真正函数的调用地址. 而<code>read()</code>写到bss段的是<code>execve</code>的地址, 但csu调用的时候提供的是bss段的地址, 这样才能完成函数调用. 如果直接传<code>execve</code>地址, 那么是无法调用成功的.
+        </details>
+
+        <details>
+        <summary>Q2: 为什么可以用写入的<code>/bin/sh</code>地址能成功, 而直接用libc内的<code>/bin/sh</code>地址就不能成功呢?</summary>
+        我一个可能性比较高的推测是, 回顾我们的gadget, 对于x64传参的第一个寄存器<code>rdi</code>, 其实我们的gadget只能控制寄存器<code>rdi</code>的低32位(<code>edi</code>). 而对于bss段地址来说, 它实际上是一个32位的地址(高32位为0), 而libc内的<code>/bin/sh</code>是一个64位的地址(高32位不为0), 所以没有办法传递完整的地址进去. 所以只能通过bss上写入的<code>/bin/sh</code>地址进行传参. 
+        </details>
+
         <details>
         <summary>csu函数实现</summary>
         
@@ -102,7 +113,7 @@
            sleep(1)
         ```
         </details>
-
+    - [ ] []
 </details>
 
 
