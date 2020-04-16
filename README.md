@@ -348,9 +348,9 @@
 </details>
 
 <details>
-<summary>Day6: ptmalloc2内存管理机制和阅读小型堆分配器源码</summary>
+<summary>Day6: ptmalloc2内存管理机制(分配和释放)</summary>
 
-- [ ] ptmalloc2内存管理概述
+- [x] ptmalloc2内存管理概述
     - [x] 内存管理的设计假设
         1. 对`长生命周期`的`大内存`分配使用`mmap`, `特别大`的内存总是使用`mmap`, `短生命周期`的内存分配用`brk`
         2. 尽量缓存临时使用的`空闲小内存块`, `大内存`或`长生命周期`内存释放时则直接返还系统
@@ -438,11 +438,53 @@
         4. 判断chunk的大小和位置, 若`chunk_size <= max_fast`且该chunk不与top chunk相邻, 则将该chunk放入fastbins中(不修改该chunk的`P`标志, 也不与相邻chunk进行合并), 否则进行下一步
         5. 判断前一个chunk是否处在使用中, 如果前一个chunk也是空闲状态, 则一起合并
         6. 判断后一个chunk是否为top chunk, 如果不是, 则判断后一个chunk是否空闲状态, 空闲则合并, 将合并后的chunk放到`unsorted bin`中. 如果是后一个chunk是top chunk, 那么无论它有多大都一律和top chunk合并, 更新top chunk的大小等信息. 都同样继续以下步骤
-        8. 判断合并后的chunk大小是否大于`FASTBIN_CONSOLIDATION_THRESHOLD`, 如果是, 则触发fastbins的合并操作, 合并后的chunk放入`unsorted bin`
-        9. 判断top chunk的大小是否大于mmap收缩阈值, 大于的话, 对于main_arena会试图归还topchunk的一部分(最初分配的128KB不会返还)给操作系统. 对于non_main_arena会进行sub-heap收缩, 将top chunk的一部分返还给操作系统. 如果top chunk为整个sub-heap, 会把整个sub-heap返回给系统. 至此释放结束, free()函数退出.
+        7. 判断合并后的chunk大小是否大于`FASTBIN_CONSOLIDATION_THRESHOLD`, 如果是, 则触发fastbins的合并操作, 合并后的chunk放入`unsorted bin`
+        8. 判断top chunk的大小是否大于mmap收缩阈值, 大于的话, 对于main_arena会试图归还topchunk的一部分(最初分配的128KB不会返还)给操作系统. 对于non_main_arena会进行sub-heap收缩, 将top chunk的一部分返还给操作系统. 如果top chunk为整个sub-heap, 会把整个sub-heap返回给系统. 至此释放结束, free()函数退出.
             * 收缩堆的条件是当前free的chunk大小加上前后能合并的chunk的大小大于64K, 并且top chunk的大小要达到mmap收缩阈值, 才可能收缩堆.
-   
+</details>
 
+<details>
+<summary>Day7: 软件破解技术</summary>
+
+- [x] 静态分析:
+    - [x] 基本信息分析: 从三个方面判断程序是否加密
+        1. PE程序的区段信息: 正常的PE程序比较规则, 大多是`.text/.data/.rsrc/.reloc`, 而加密后的区段常有明显特征
+        2. PE导入表信息: 加密后的导入表往往只有少数的几个dll.
+        3. PE程序入口点: 标准编译器编译出来的入口点代码比较规范. 
+   - [x] 代码静态分析: 结合工具进行静态分析, 比如`IDA`, .NET程序使用`ildasm IL/.NET Reflector`
+- [x] 软件调试:
+    - [x] 一般调试原理: 
+        * windows内置有调试API和相应的调试事件. 
+        * 异常处理流程: 软硬件异常->通过IDT被系统捕获->系统分类异常->交由调试器处理->通过`KiUserExceptionDispatcher`函数交由进程内SHE处理->再次交由调试器处理->触发系统软件异常流程
+            * 任何异常, 尤其是软件异常, 都需要内核过滤, 并在保护层和内核层来回切换, 速度相当慢
+            * 调试器处理异常的优先级在保护层中是最高的 , 内核无法处理的异常都会优先传递给调试器来处理
+        * 调试器一般软断点都是通过人为触发INT3异常来实现
+        * 硬件断点通过CPU的DR系列寄存器实现. 因为寄存器数据有限, 因此最多只能同时下`4`个硬件断点.
+        * 硬件断点的好处在于无需修改调试指令, 并且执行速度很快. 
+        * 内存断点是通过`修改内存页的属性触发访问异常`实现
+    - [x] 伪调试技术:
+        * 在程序进程内注入代码, 接管`KiUserExceptionDispatcher`函数入口, 从而在改程序处理任何异常前得到对异常的优先处理. 然后代替系统将异常处理的信息转交给外部调试器. 
+    - [x] 远程调试: `cdb -server tcp:port=123 -noio c:\windows\notepad.exe`然后用windbg连接远程调试会话. 
+    - [x] 虚拟机调试: 连接虚拟机提供的调试接口进行调试
+- [x] Hook:
+    * 代码Hook: 使用流程控制指令(比如`jmp`或`push/ret`组合指令)来实现对程序流程的控制
+    * 模块Hook: 这里的模块可以理解为DLL, `GetModuleHandleA`函数能给定模块名后获得模块对应的基址, 进程每次载入模块, 系统都会维护一张模块的列表, 列表中保存了模块的许多信息其中就包括基址. 而这个列表所在的地址保存在PEB的`LoaderData+C`位置, 而模块链表的结构中的`hashTableList`就是`GetModuleHandleA`所查找的表. 
+- [x] 代码注入: 
+    1. 暂停的方式启动进程, 这样能保证程序的入口代码尚未被执行
+    2. 注入需要在目标进程中执行的额外代码
+    3. 设置线程上下文的方式修改主模块入口到额外代码入口. windows下以暂停方式启动一个进程后, 系统会把主模块入口放在线程上下文的eax成员中, 修改该成员即可修改主模块入口地址.
+    4. 恢复目标进程并执行
+- [x] 补丁:
+    * 冷补丁: 直接修改程序中所包含的数据来修改程序执行流程或结果. 
+    * 热补丁: 在程序运行过程中直接修改程序所在进程的内存空间数据
+    * SMC: 直接修改压缩或加密后数据, 使这些数据被解压或者解密后最终呈现我们所涉及的数据. 
+    * 虚拟化补丁: 通过硬件或者软件虚拟将代码运行时执行和读写的代码页分离, 然后通过修改执行页中的数据达到修改程序运行流程的目的. 
+- [x] 模块重定位
+    * 在Windows进程中, 除了NTDLL模块地址无法直接修改, 其他模块都可以重定位
+    * 具体步骤
+        1. 通过篡改`ZwOpenSection`函数, 使系统放弃以共享内存段的方式加载一个模块
+        2. 通过篡改`ZwMapViewOfSection`函数, 使系统加载模块到指定的基址
+        3. 处理特殊模块kernel32
 </details>
 
 ## 相关资源
