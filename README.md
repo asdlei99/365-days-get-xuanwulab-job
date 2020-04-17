@@ -487,6 +487,29 @@
         3. 处理特殊模块kernel32
 </details>
 
+<details>
+<summary>Day8: Linux内核及其内在机理</summary>
+
+> 传送门: [linux-insides](https://github.com/0xAX/linux-insides)
+
+- [x] 从引导加载内核:
+    1. 按下电源开关主板供电备妥后, CPU会`复位寄存器的所有数据, 并设置每个寄存器的预定值`. CPU复位后, 寄存器的预设数据如下: `IP=0xfff0, CS=0xffff`. `实模式`下内存寻址时通过段寄存器偏移(实模式CPU只能用16位寄存器)得到, 也即`CS:IP=(0xffff)<<4+0xfff0=0xfffffff0`. 而实模式下CPU是无法访问`0xfffffff0`这个地址的, 所以`0xfffffff0`被映射到了ROM而非RAM. 
+    2. `0xfffffff0`是`4GB-16B`, 也就是`复位向量`所在位置, 也就是CPU在重置后期望执行的内存地址入口. 通常为一个`jump指令`, 用于跳往`BIOS入口`
+    3. BIOS在初始化和检查硬件后, 需要找到一个`可引导设备`. BIOS会根据BIOS配置里的可引导设备列表顺序, 依次尝试寻找引导程序, 对硬盘而言就会去`MBR分区`, 该分区存储在磁盘第一个扇区(512字节)的头446字节, 引导扇区的最后必须为`0x55`和`0xaa`(这是引导程序的magic标识). 
+    4. `MBR`分区代码只能占用一个扇区, 因此非常简单, 只做了一些初始化, 然后就跳转到`GRUB2`的`core image`去继续执行. `core image`的初始化代码会把整个`core image`(包括GRUB2的内核代码和文件系统驱动)引导到内存中. 引导完成后, 调用`grub_main`
+    5. `grub_main`初始化控制台, 计算模块基地址, 设置root设备, 读取grub配置文件, 加载模块. 最后将grub置于`normal`模式, 调用`grub_nomal_execute`完成最后的准备工作, 然后显示菜单列出所有可用的操作系统. 
+    6. 选择操作系统之后, 执行`grub_menu_execute_entry`, 它会调用grub的`boot`命令, 来引导选择的系统.
+    7. 引导会根据`kernel boot protocol`的描述, 填充`kernel setup header`里的字段, 将内核引导入内存后, 交由Kernel继续执行. Kernel的代码从`0x1000 + X + sizeof(KernelBootSector) + 1`开始执行(`X`是kernel bootsector被载入内存的基址)
+- [x] 内核引导和设置
+    1. 首先需要正确设置内核, 内核设置代码的运行起点为`arch/x86/boot/header.S`的`_start`函数. 在`_start`之前还有一些kernel自带的bootloader代码, 主要是兼容`UEFI`. 
+    2. `_start`第一句就是`jmp`语句, 跳转到其后的相对地址(`start_of_setup-1f`), 也就是`_start`后第一个标号为`1`的代码, 该部分包含了剩下的`setup header`结构. 而`1`之后就是`start_of_setup`的代码, 该部分开始会完成`段寄存器设置`, `堆栈设置`, `bss段设置`, `跳转到main.c开始执行代码`的工作
+    3. `段寄存器设置`: 将`ds`和`es`寄存器的内容设置为一样, 通过利用`lretw`将`ds`寄存器的值放入`cs`寄存器
+    4. `堆栈设置`: 检查`ss`寄存器的内容, 如果内容不对则进行更正
+    5. `设置BSS段`: 检查`magic`签名`setup_sig`, 如果签名不对直接跳转到`setup_bad`执行相应代码. 如果签名正确, 就设置好`BSS`段将其全部清零. 
+    6. `跳转到main函数`: `calll main`. main()定义在`arch/x86/boot/main.c`
+</details>
+
+
 ## 相关资源
 
 * [CTF Wiki](https://ctf-wiki.github.io/ctf-wiki/): 起初是X-Man夏令营的几位学员, 由[iromise](https://github.com/iromise)和[40huo](https://github.com/40huo)带头编写的CTF知识维基站点. 我早先学习参与CTF竞赛的时候, CTF一直没有一个系统全面的知识索引. [CTF Wiki](https://ctf-wiki.github.io/ctf-wiki/)的出现能很好地帮助初学者们渡过入门的那道坎. 我也有幸主要编写了Wiki的Reverse篇. 
