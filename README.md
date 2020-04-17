@@ -522,6 +522,28 @@
         2. `lgdt gdt`
         3. 设置CR0寄存器的PE位为1, 使CPU进入保护模式
         4. 跳转执行保护模式代码.
+- [x] main函数操作:
+    1. 将启动参数拷贝到`zeropage`: 调用`copy_boot_params(void)`, 该函数将`内核设置信息`拷贝到`boot_params`结构的相应字段. 
+    2. 控制台初始化: 调用`console_init`. 
+       1. 该函数先查看命令行参数是否包含`earlyprintk`选项. 
+       2. 如果包含, 函数将分析这个选项的内容, 得到控制台将使用的`串口信息`并进行`串口初始化`. 
+       3. 串口初始化成功后, 如果命令行参数带有`debug`选项, 可以看到一行输出`early console in setup code`
+    3. 堆初始化: 内核需要初始化全局堆, 通过`init_heap`实现
+       1. 首先检查`内核设置头`的`loadflags`是否设置`CAN_USE_HEAP`标志. 如果设置了该标志, 代码会计算`栈的结束地址`和`堆的结束地址`
+       2. 栈的结束地址计算: `stack_end = esp - STACK_SIZE`
+       3. 堆的结束地址: `heap_end = head_end_ptr + 0x200`
+       4. 判断`heap_end`是否大于`stack_end`. 如果大于, 那么就把`stack_end`设置为`heap_end`(栈和堆的生长方向相反, 这里设置让堆和栈相邻, 增大了栈的底部空间, 不影响栈逆向生长)
+       5. 这样就完成了全局堆的初始化, 全局堆初始化之后, 就可以使用`GET_HEAP`方法了.
+    4. 检查CPU类型: 调用`validate_cpu`检查CPU是否可用. `validate_cpu`会调用`check_cpu`得到当前系统的`cpu_level`并和系统要求的最低`cpu_level`比较, 如果不满足就不允许系统运行. 
+    5. 内存分布侦测: 调用`detect_memory`进行内存侦测, 得到系统当前内存的使用分布. 以下是`detect_memory_e820`(该方法的多种接口之一, 用于获取全部内存分配)原理:
+       1. 调用`initregs`方法初始化`biosregs`数据结构, 然后向该数据结构填入`e820`接口所要求的参数. 
+       2. 通过循环收集内存信息. 循环结束后整个内存分配信息被写入到`e820entry`数组, 数组元素包含三个信息: `内存段起始地址`, `内存段大小`, `内存段类型`. 可以使用`dmesg`查看到这个数组的内容
+    6. 键盘初始化: 调用`keyboard_init()`方法进行键盘初始化. 首先调用`initregs`初始化寄存器结构, 然后调用`0x16`中断获取键盘状态, 获取状态后再次调用`0x16`中断来设置键盘的按键检测频率. 
+    7. 系统参数查询: 内核进行一系列的参数查询, 依次是:
+       1. `query_mac`调用`0x15`中断来获取机器的型号, bios版本和其他硬件相关信息. 
+       2. `query_ist`获取`Intel SpeedStep`信息, 首先检查CPU类型, 然后用`0x15`中断获取该信息并填入`boot_params`中
+       3. `query_apm_bios`从BIOS获取电源管理信息. 
+       4. `query_edd`从BIOS查询硬盘信息. 
 </details>
 
 
