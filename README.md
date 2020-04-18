@@ -577,8 +577,7 @@
     * `am start [Activity名]`: 启动指定activity.
       * 对于intent可以使用`-e key value`传递字符串键值
       * 对于service可以使用`am startservice`启动
-- [ ] `drozer`的使用
-- [ ] APP中的漏洞:
+- [x] APP中的漏洞:
   * logcat信息泄露: logcat里泄露了一些网址信息(http(s))或者cookie信息
   * 检查网络流量:
     1. 在设备上使用`tcpdump`和`nc`捕获流量: `tcpdump -w - | nc -l -p 31337`
@@ -586,7 +585,14 @@
     3. 本地`nc`连接转发端口: `nc 127.0.0.1 12345`
     4. `wireshark`连接管道获取流量: `nc 127.0.0.1 12345 | wireshark -k -S -i -`
   * 通过`am`被动嗅探`intent`: TODO 需要使用`drozer`
-  * 攻击service: TODO 需要`drozer`
+  * 攻击service: 
+    1. 搜索哪些service是exported
+    2. 尝试运行这些service. 运行的同时使用`logcat`来查看它是否会在运行时泄露一些敏感信息
+    3. 如果想通过intent向service发送数据, 你需要去了解它的`intent filter`. 
+    4. 某些service可能作为原生库的接口, 将intent接受的数据转换成类似基于堆/栈的数据结构, 这可能会造成内存溢出漏洞
+  * 攻击broadcast receiver:
+    * 发掘receiver的漏洞需要确定`输入是否可信`以及该`输入的破坏性如何`. 
+    * 需要阅读源码, 弄清楚receiver的`intent filter`
 - [x] 保护APP:
   * 保护APP组件: 正确使用`AndroidManifest.xml`以及在代码级别上强制进行权限检查
     * 尽量减少`android:exported`属性的使用, 尽可能地减少暴露的组件
@@ -667,6 +673,18 @@
     3. 输出文件是添加了公钥证书的`customtruststore.bks`(bks为Bouncy Castle Keystore). 保护口令为`androidcockbook`
     4. 复制`customtruststore.bks`到app的raw文件夹去. 
     5. 在app代码里从raw文件夹中加载本地truststore到一个KeyStore对象里去. ? 书里将保护口令硬编码了出来, 但是该口令只是用于验证truststore的完整性, 不是用来保护其安全性. 而且truststore是服务器的公钥证书
+- [x] Android原生代码的漏洞分析
+  * 检查文件权限: 寻找权限设置不正确或存在问题的文件
+    * 列出"所有用户均可读取的文件": `find [path-to-search] -perm 0444 -exec ls -al {} \;`
+    * 列出"所有用户均可写的文件": `find [path-to-search] -perm 0222 -exec ls -al {} \;`
+    * 列出"所有用户均可执行的文件": `find [path-to-search] -perm 0111 -exec ls -al {} \;`
+    * 列出"setuid位设为1的可执行文件": `find [path-to-search] -perm -4111 -exec ls -al {} \;`
+    * 列出所有属于"root"用户的文件: `find [path-to-search] -user 0 -exec ls -al {} \`
+  * 交叉编译原生可执行程序: 创建Android.mk文件和JNI文件夹, 利用NDK提供的`ndk-build`进行编译.
+  * 条件竞争漏洞. 攻击者利用条件竞争漏洞需要满足以下条件:
+    1. 能访问和恶意修改存在漏洞的进程所要竞争访问的资源: 如果攻击者无法访问到竞争的资源, 那么是不能引发漏洞的. 当有访问能力时, 进程内所有不适用互斥的独占式访问就都可以利用, 而且进程不检查信号量或自旋锁就直接使用某个指针指向数据的情况发生的非常频繁
+    2. 使用时间/检查时间(TOU/TOC)的窗口大小: 本质上是应用程序请求访问一个资源和实际访问到该资源之间的时间差. 竞争条件漏洞利用非常依赖于该时间差, 因为利用的本质就是在这个时间差内竞争到资源的访问权, 以恶意地影响资源.
+  * fuzzing: 使用`Radamsa`进行模糊测试 
 </details>
 
 
@@ -676,6 +694,7 @@
 * [漏洞战争:软件漏洞分析精要](https://book.douban.com/subject/26830238/): [riusksk](http://riusksk.me/)写的分析大量漏洞实例的书, 一般建议先学习过[《0day安全:软件漏洞分析技术》](https://book.douban.com/subject/6524076/)后再阅读该书. 我早先阅读过该书的大部分内容, 一般我看漏洞分析的文章都有点跟不太上, 但是看该书的时候作者讲的还是蛮好的. 另外该书是按`漏洞类型`和`CVE实例`划分章节, 所以可以灵活挑选自己需要看的内容. 
 * [0day安全:软件漏洞分析技术](https://book.douban.com/subject/6524076/): Windows漏洞分析入门的必看书就不多介绍了. 这本书曾一度抄到千元的价格, 好在[看雪](https://www.kanxue.com/)近年组织重新印刷了几次, 我也是那时候入手的该书, 可以多关注下看雪的活动. 该书的内容很多也很厚实, 入门看的时候可谓痛不欲生, 看不懂的就先跳过到后面, 坚持看下来就能渡过入门的痛苦期了.
 * [软件保护及分析技术](https://book.douban.com/subject/26841178/): 该书分为2个部分, 前半部分讲保护和破解的技术, 后半部分造轮子. 前半部分讲的技术分类都蛮多的, 不过大多都是点到即止深度不够, 所以我一般都是看前半部分的当速查和回顾的工具书. 我接下来的目标是该书后半的造轮子部分. 
+* [Android安全攻防实战](https://book.douban.com/subject/26437165/): 一本可能适合新手阅读的Android安全书籍, 因为里面涉及的代码比较少分析的难度相对低一些. 这本书更多的是给你一个如果去研究Android安全, 发掘安全问题的角度和思路, 有从开发者的视角做防护也有攻击者的视角去分析. 主要是真不难而且篇幅不多, 我觉得还是蛮适合上手的. 
 
 ## 腾讯玄武实验室
 
