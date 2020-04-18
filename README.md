@@ -577,8 +577,45 @@
     * `am start [Activity名]`: 启动指定activity.
       * 对于intent可以使用`-e key value`传递字符串键值
       * 对于service可以使用`am startservice`启动
-
-`</details>
+- [ ] `drozer`的使用
+- [ ] APP中的漏洞:
+  * logcat信息泄露: logcat里泄露了一些网址信息(http(s))或者cookie信息
+  * 检查网络流量:
+    1. 在设备上使用`tcpdump`和`nc`捕获流量: `tcpdump -w - | nc -l -p 31337`
+    2. 使用adb命令将设备的流量转发到本地端口: `adb forward tcp:12345 tcp:31337`
+    3. 本地`nc`连接转发端口: `nc 127.0.0.1 12345`
+    4. `wireshark`连接管道获取流量: `nc 127.0.0.1 12345 | wireshark -k -S -i -`
+  * 通过`am`被动嗅探`intent`: TODO 需要使用`drozer`
+  * 攻击service: TODO 需要`drozer`
+- [x] 保护APP:
+  * 保护APP组件: 正确使用`AndroidManifest.xml`以及在代码级别上强制进行权限检查
+    * 尽量减少`android:exported`属性的使用, 尽可能地减少暴露的组件
+    * android 4.2之前, 或者sdk版本17以下, 定义的`intent-filter`元素默认是导出的.
+  * 定制权限: 指定组件的`android:permission`和定义`permission-group`
+  * 保护`provider`组件:
+    * 设置权限`android:permission`
+    * 设置读相关权限(query): `android:writePermission`
+    * 设置写相关权限: `android:readPermission`
+    * 使用`path-permission`元素为单独的路径(比如`/[path]`)设置不同的权限, `path`的权限设置优先级更高
+  * 防御SQL注入: 确保攻击者不能注入恶意构造的SQL语句
+    * 避免使用`SQLiteDatabase.rawQuery()`, 而是改用一个参数化的语句(参数化的意思就是指定一个语句的格式, 并非指定参数, 而是描述性的表达语句, 可以类比为格式化字符串, 比如`insert into TABLE_NAME (content, link, title) values (?,?,?)`). 
+    * 使用一个预先编译好的语句, 比如`SQLiteStatement`, 提供对参数的绑定(binding)和转义(escaping). 
+    * 使用`SQLiteDatabase`提供的`query`, `insert`, `update`和`delete`方法. 
+  * 验证app的签名: 根据事先计算好的签名哈希, 在代码运行时进行比对来判断文件是否被篡改
+  * 反逆向工程方式: 
+    * 检测安装程序: 比如检查安装程序是否为谷歌商店
+    * 检查是否出于模拟器中: 获取相应的系统特征字符串进行判断
+    * 检查app的调试标志是否启用: 启用调试标志意味着app可能连上了adb进行调试
+    * 利用JAVA的反射API能在运行时检查类, 方法及成员变量, 这使得能够绕过访问控制修饰符(`access modifier`)的限制, 调用正常情况下无法使用的东西. 
+  * 使用`ProGuard`: `ProGuard`是Android SDK自带的开源java代码混淆器.
+    * `ProGuard`会把程序执行时不需要的信息都删除掉, 比如代码中不使用的方法, 域, 属性和调试信息
+    * 它会把一些代码优化成更短更难以阅读的混淆代码
+  * 使用`DexGuard`进行高级代码混淆
+    * 相比`ProGuard`不仅能混淆Java代码, 还能保护资源文件和Dalvik字节码
+    * API隐藏: 使用`API反射机制`隐藏对敏感API和代码的调用
+    * 字符串加密: 对源代码的字符串进行加密
+    * 反射调用会把类名和方法名包存为字符串, 而字符串加密可以结合起来将这些反射字符串加密起来. 
+</details>
 
 
 ## 相关资源
