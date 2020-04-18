@@ -546,6 +546,40 @@
        4. `query_edd`从BIOS查询硬盘信息. 
 </details>
 
+<details>
+<summary>Day8: Android安全里的攻防和分析知识</summary>
+
+> Android安全部分参考[《Android安全攻防实战》](https://book.douban.com/subject/26437165/)
+
+- [x] APK结构:
+  * 证书签名
+    * 证书文件在APK解压后的`META-INF`文件夹内.
+      * `CERT.RSA`是公钥证书的自签名. 
+        * 使用`keytool`进行检查: `keytool -printcert -file CERT.RSA`, 其中有声明`公钥的持有者`.
+        * 使用`openssl`进行检查: `openssl pcks7– inform DER –in META- INF/ CERT. RSA –noout –print_ certs –text` 
+        它指定了以下5个信息
+        * `Owner`: 公钥持有者, 包含与该个体相关的国家组织信息
+        * `Issuer`: 声明该证书的颁发机构. 
+        * `Serial number`: 证书的标识符
+        * `Valid from...until`: 指定证书有效期, 其关联属性可以由颁发者验证
+        * `Certificate fingerprints`: 记录证书的数字校验和, 用来验证证书是否经过村阿盖
+      * `CERT.SF`包含了APK中各个资源文件的SHA-1哈希. 使用`jarsigner`验证apk内容时就会比对该文件. 
+      * `MANIFEST.MF`: 声明资源文件
+    * 如何对App签名?
+      1. 创建`keystore`, 用于存放签名app所使用的私钥: `keytool –genkey –v -keystore [keystore名称] –alias [私钥别名] –keyalg RSA –keysize 2048 –validity [有效天数]`
+      2. 使用`keystore`通过`jarsigner`对app签名: `jarsigner –verbose –sigalg MD5withRSA –digestalg SHA1 –keystore [keystore文件] [你的.apk文件] [私钥别名]`
+    * 如何验证app签名? `jarsigner –verify –verbose [apk文件]`
+  * `AndroidManifest.xml`: 声明app的权限和组件信息
+    * 如何提取`AndroidManifest.xml`? `apktool d -f -s [apk文件] [解压目录]`
+  * adb命令:
+    * `adb logcat`: 显示调试日志
+    * `adb shell pm list packages`: 列出设备中所有package
+    * `am start [Activity名]`: 启动指定activity.
+      * 对于intent可以使用`-e key value`传递字符串键值
+      * 对于service可以使用`am startservice`启动
+
+`</details>
+
 
 ## 相关资源
 
