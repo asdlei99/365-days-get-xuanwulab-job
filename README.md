@@ -615,6 +615,39 @@
     * API隐藏: 使用`API反射机制`隐藏对敏感API和代码的调用
     * 字符串加密: 对源代码的字符串进行加密
     * 反射调用会把类名和方法名包存为字符串, 而字符串加密可以结合起来将这些反射字符串加密起来. 
+- [x] 逆向app
+  * java源码编译成dex:
+    1. `javac -source 1.6 -target 1.6 example.java`
+    2. `dx --dex --output=example.dex example.class`
+  * dex文件格式: 可以使用`dexdump example.dex`进行解析
+    * magic(8bytes): `dex\n035`
+    * checksum(4B): 表示dex文件的`Adler32`校验和, 用于验证dex文件头是否被篡改. 
+    * SHA签名(20B)
+    * fileSize(4B): 表示整个dex文件的长度
+    * headerSize(4B): 表示整个DexHeader结构的长度, 单位为byte
+    * endianTag(4B): 存放的是固定值, 在所有dex文件中都意义. 为`0x12345678`, 根据这个值在内存的排列顺序来判断是大端序还是小端序.
+    * linkSize和linkOff: 多个.class被编译到一个dex时会哟感到
+    * mapOff
+    * stringIdsSize: 存放StringIds区段大小. 
+    * stringIdsOff: 存放stringIds区段的实际偏移, 帮助Dalvik编译器和虚拟机直接跳转到该区段而不用计算偏移. 
+    * StringIds区段实际上保存的是各个字符串的地址
+    * TypeIds区段则是存放了各个类型描述符在stringIds列表的索引号. 
+    * ProtoIds区段存放一系列用来描述方法的prototype id, 其中含有关于各个方法的返回类型和参数信息
+    * FieldIds区段由一些stringIds和typeIds区段中数据的索引号组成, 用于描述类中各个成员
+    * MethodIds区段用于描述方法, ClassDefs区段用于描述类
+    * 除开用`dexdump`对dex解析, 还可以使用`dx`, 不过你得有相应的class文件: `dx -dex -verbose-dump -dump-to=[output].txt [input].class`
+  * 反汇编/反编译/gdb调试操作:
+    * 将dex反汇编得到smali代码: `baksmali example.dex`
+    * 将dex反编译得到.class文件: `dex2jar example.dex`
+    * 将.class反编译得到java代码: 使用jd-gui
+    * 反汇编native so文件: 使用android ndk的toolchain提供的arm版本objdump. `arm-linux-androideabi-objdump -D [native library].so`
+    * gdb调试正在运行的android进程:
+      * `mount`会输出每个块设备都是怎么mount的一些信息
+      1. `mount -o rw,remount [device] /system`
+      2. `adb push [NDK-path]/prebuilt/android-arm/gdbserver/gdbserver /system/bin`
+      3. 使用`ps`确定要调试的进程PID, 使用gdbserver进行attach: `gdbserver :[tcp-port] --attach [PID]`
+      4. 转发android设备的TCP端口: `adb forward tcp:[remote_port] tcp:[local_port]`
+      5. 本地运行交叉编译好的`arm-linux-androideabi-gdb`然后输入`target remote :[local_port]`来连接端口
 </details>
 
 
