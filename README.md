@@ -547,7 +547,7 @@
 </details>
 
 <details>
-<summary>Day8: Android安全里的攻防和分析知识</summary>
+<summary>Day9: Android安全里的攻防和分析知识</summary>
 
 > Android安全部分参考[《Android安全攻防实战》](https://book.douban.com/subject/26437165/)
 
@@ -648,6 +648,25 @@
       3. 使用`ps`确定要调试的进程PID, 使用gdbserver进行attach: `gdbserver :[tcp-port] --attach [PID]`
       4. 转发android设备的TCP端口: `adb forward tcp:[remote_port] tcp:[local_port]`
       5. 本地运行交叉编译好的`arm-linux-androideabi-gdb`然后输入`target remote :[local_port]`来连接端口
+- [x] SSL安全:  验证SSL签名证书: 利用OpenSSL
+  1. 对于网络上的自签名证书, 使用`openssl s_client -showcerts -connect server.domain:443 < /dev/null`显示该证书的详细信息, `BEGIN CERTIFICATE`到`END CERTIFICATE`部分为证书内容, 将其保存为`mycert.crt`
+    * 使用openssl创建自签名证书: `openssl genrsa -out my_private_key.pem 2048`生成.pem的私钥文件, 然后用该私钥生成证书: `openssl req -new -x509 -key my_private_key.pem -out mycert.crt -days 365`
+  2. 得到`mycert.crt`后, 我们要将证书打包到app中, 就需要创建证书并将其导入到`.keystore`文件中, 该文件会被视为`truststore`.
+  3. 使用`Bouncy Castle`库创建并导入证书到truststore:
+    1. 设置`CLASSPATH`环境变量: `$ export CLASSPATH=libs/bcprov-jdk15on-149.jar`
+    2. 使用`keytool`创建并导入公钥证书
+        ``` bash
+        $ keytool -import -v -trustcacerts -alias 0 / 
+          -file < ( openssl x509 -in mycert.crt) / 
+          -keystore customtruststore.bks / 
+          -storetype BKS / 
+          -providerclassorg.bouncycastle.jce.provider.BouncyCastleProvider /
+          -providerpath libs/bcprov-jdk15on-149.jar \
+          -storepass androidcookbook
+        ```
+    3. 输出文件是添加了公钥证书的`customtruststore.bks`(bks为Bouncy Castle Keystore). 保护口令为`androidcockbook`
+    4. 复制`customtruststore.bks`到app的raw文件夹去. 
+    5. 在app代码里从raw文件夹中加载本地truststore到一个KeyStore对象里去. ? 书里将保护口令硬编码了出来, 但是该口令只是用于验证truststore的完整性, 不是用来保护其安全性. 而且truststore是服务器的公钥证书
 </details>
 
 
