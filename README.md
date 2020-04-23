@@ -825,6 +825,52 @@
   * 建立关系: `r1 = Relationship(a, 'to', b, name='goto')`
 </details>
 
+<details>
+<summary>Day13: 学习Neo4j的CQL语法以及使用python操作es</summary>
+
+> 传送门: [Neo4j教程](https://www.w3cschool.cn/neo4j/)
+
+- [x] Neo4j:
+  * 优点: 容易表示连接的数据, 检索/遍历/导航连接数据容易且快速, 容易表示半结构化数据
+  * 构建模块:
+    * 节点: 节点是图表的基本单位, 包含具有键值对的属性
+    * 属性: 用于描述图节点和关系的键值对
+    * 关系: 用于连接两个节点, 具有方向, 关系也有属性
+    * 标签: 用于描述节点和关系, 是一个分类
+  - [x] CQL:
+    * CREATE: 用于创建节点, 关系和标签, 要注意, CREATE始终都会创建新的节点
+      * 创建没有属性的节点: `CREATE (<node-name>:<label-name>)`
+      * 创建具有属性的节点: `CREATE (<node-name>:<label-name>{<Property1-name>:<Property1-Value>})`
+      * 还可以用于创建关系和标签
+    * MATCH: 用于获取匹配到的数据
+      * `MATCH (<node-name>:<label-name>)`
+      * 不过MATCH不能单独使用, 需要进行配合
+    * RETURN: 用于节点的属性, 关系的属性
+      * `RETURN <node-name>.<property1-name>`
+      * 同MATCH意义不能单独使用 
+    * MATCH+RETURN: MATCH可以和RETURN组合使用: `MATCH Command \n RETURN Command`
+    * 创建关系: `CREATE (p1:Profile1)-[r1:LIKES]->(p2:Profile2)`
+      * `CREATE (<node1-name>:<label1-name>)-[(<relationship-name>:<relationship-label-name>)]->(<node2-name>:<label2-name>)` 
+    * WHERE: 用于过滤MATCH的结果, `WHERE <condition> <boolean-operator> <condition>`, condition的格式为`<property-name> <comparison-operator> <value>`
+    * DELETE: 用于删除节点和关系, `DELETE <node-name-list>` 这里的list是用MATCH返回得到的, 也可以是用`,`分隔的多个节点名
+    * SET: 用于设置或修改属性, 用法与DELETE类似 
+    * REMOVE: 用于删除属性和标签: 用法与DELETE类似
+    * ORDER BY: 用于对MATCH结果进行排序, `ORDER BY  <property-name-list>  [DESC]`
+    * UNION: 用于将结果合并, 要求结果的名称/数据类型都必须匹配, `<MATCH Command1> UNION <MATCH Command2>`
+    * LIMIT: 用于限制MATCH返回结果的行数, 它修剪CQL查询结果集底部的结果, `LIMIT <number>`
+    * SKIP: 同LIMIT, 不过是修剪了结果集顶部的结果
+    * MERGE: `MERGE = CREATE + MATCH`, MERGE会在创建节点前进行查重, 如果重复了就不会插入新节点.
+    * NULL值: CQL里将NULL视作为`缺失值`或`未定义值`, 很多没有指定的地方都会用NULL进行缺省
+    * IN: `IN[<Collection-of-values>]`, 类似python的in, 用于确定范围
+    * 函数:
+      * String函数: `UPPER/LOWER/SUBSTRING/REPLACE`
+      * AGGREGATION函数: `COUNT/MAX/MIN/SUM/AVG`
+      * 关系函数: `STARTNODE/ENDNODE/ID/TYPE`
+    * 索引: `CREATE INDEX ON :<label_name> (<property_name>)`
+    * UNIQUE约束: `CREATE CONSTRAINT ON (<label_name>) ASSERT <property_name> IS UNIQUE`
+
+</details>
+
 ## 相关资源
 
 * [CTF Wiki](https://ctf-wiki.github.io/ctf-wiki/): 起初是X-Man夏令营的几位学员, 由[iromise](https://github.com/iromise)和[40huo](https://github.com/40huo)带头编写的CTF知识维基站点. 我早先学习参与CTF竞赛的时候, CTF一直没有一个系统全面的知识索引. [CTF Wiki](https://ctf-wiki.github.io/ctf-wiki/)的出现能很好地帮助初学者们渡过入门的那道坎. 我也有幸主要编写了Wiki的Reverse篇. 
