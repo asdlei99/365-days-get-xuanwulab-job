@@ -903,6 +903,56 @@
     * 基于统计: 利用机器学习方法, 通过统计规律从知识图谱中可以有效发现一些网络异常和攻击, 挖掘安全威胁的隐藏关系和路径, 并对攻击进行预测, 从而感知并展示网络的安全态势. 主要包括实体关系学习方法, 类型推理方法和模式归纳方法. 
 </details>
 
+<details>
+<summary>Day15: 阅读模糊测试资料和掌握Radare2用法</summary>
+
+> 传送门: [The Fuzzing Book](https://www.fuzzingbook.org/), [A journey into Radare 2](https://www.megabeets.net/a-journey-into-radare-2-part-1/#Getting_radare2)
+
+- [x] [Fuzzing: Breaking Things with Random Inputs](https://www.fuzzingbook.org/html/Fuzzer.html#Fuzzing:-Breaking-Things-with%C2%A0Random%C2%A0Inputs): 讲述了简单的随机数生成Fuzzer及其构造, 并通过简单的代码示例介绍了比如内存溢出, 信息泄露的问题, 还有一些内存检查ASAN和assert来帮助检查错误的方法.
+- [x] Radare2
+  * 一些常用的选项:
+    * -a arch 指定架构
+    * -A 运行aaa命令用以进行完整的分析
+    * -b bits 指定比特数
+    * -B baddr 指定载入基地址
+    * -c cmd 指定要执行的radare命令
+    * -d 进入调试模式
+    * -i file 运行指定的脚本
+    * -k os 指定os (linux, macos, w32, netbsd, ...)
+    * -l lib 载入插件
+    * -p project 使用指定工程
+    * -w 以write模式打开文件
+  - [x] rabin2: 可以从二进制中提取`Sections, Headers, Imports, Strings, Entrypoints`信息, 支持多种文件格式`ELF, PE, Mach-O, Java CLASS`
+    * `rabin2 -I file`: 显示二进制的基本信息
+  * radare2命令:
+    * `ie`: 显示程序入口点信息(info entrypoint)
+    * `fs`: 显示可用的标记, `fs symbols; f`可以打印相应标记空间里的信息
+    * `iz`: 显示data段里的字符串, `izz`可以打印整个二进制内的字符串
+    * `axt`: 找到引用该地址的地方, `axf`则是找到该地址引用的目的地址. 注意现在需要指定`fs`进行搜索了. `fs strings; axt @@ str.*` 
+    * `@@`: 可以理解为for-each
+    * `afl`: analyze function list, 显示分析处的函数列表
+    * `s`: seek, 可以进入到相应的函数或地址, 函数名可以用上面的`afl`给出
+    * `pdf`: print diasm function, 显示函数的汇编指令
+      * `pdf @ sym.beet`可以用于显示指定函数的汇编
+    * `V`: 进入Visual Mode, 使用`p/P`切换模式,
+    * `Visual Mode`下的操作:
+      * `k`和`j`: 跟vim一样进行上下移动
+      * `Enter`: 在jump和call指令的时候, 可以用于进入到目的地址
+      * `u`: 返回上一个地址
+      * `x/X`: 显示交叉引用, x表示到达该指令的引用, X表示该指令所引用的地方
+      * `: command`用来执行shell命令
+      * `;[-]comment`: 用来增加/移除注释
+      * `m<key>`: 用来标记某个具体的偏移并用某个按键来绑定
+      * `q`: 退出visual mode
+    * `VV`: 进入`Visual Graph`模式, 就是直接看控制流图
+    * `Visual Graph`下的操作:
+      * `hjkl`进行移动
+      * `g`进入函数, 在graph里很多函数后面都有一个按键的标记, 按下就能进入该函数
+    * `ahi`: 用于做数据的类型转换, 比如将某个地址的数据转换成字符串类型`ahi s @ <addr>`
+    * `ood`: 重新以Debugger模式打开文件, 可以带参数, 比如`ood args1`
+    * `dc`: debug模式下执行, 类似`continue`命令, 会继续执行
+</details>
+
 ## 相关资源
 
 * [CTF Wiki](https://ctf-wiki.github.io/ctf-wiki/): 起初是X-Man夏令营的几位学员, 由[iromise](https://github.com/iromise)和[40huo](https://github.com/40huo)带头编写的CTF知识维基站点. 我早先学习参与CTF竞赛的时候, CTF一直没有一个系统全面的知识索引. [CTF Wiki](https://ctf-wiki.github.io/ctf-wiki/)的出现能很好地帮助初学者们渡过入门的那道坎. 我也有幸主要编写了Wiki的Reverse篇. 
