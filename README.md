@@ -953,6 +953,19 @@
     * `dc`: debug模式下执行, 类似`continue`命令, 会继续执行
 </details>
 
+<details>
+<summary>Day16: 阅读模糊测试资料和掌握Radare2用法</summary>
+
+- [ ] [Fuzzing Book]
+  - [ ] [Code Coverage](https://www.fuzzingbook.org/html/Coverage.html)
+  - [ ] [Mutation-Based Fuzzing](https://www.fuzzingbook.org/html/MutationFuzzer.html)
+  - [ ] [Greybox Fuzzing](https://www.fuzzingbook.org/html/GreyboxFuzzer.html)
+  - [ ] [Search-Based Fuzzing](https://www.fuzzingbook.org/html/SearchBasedFuzzer.html)
+  - [ ] [Mutation Analysis](https://www.fuzzingbook.org/html/MutationAnalysis.html)
+- [ ] [A journey into Radare 2 – Part 2: Exploitation](https://www.megabeets.net/a-journey-into-radare-2-part-2/)
+
+</details>
+
 ## 相关资源
 
 * [CTF Wiki](https://ctf-wiki.github.io/ctf-wiki/): 起初是X-Man夏令营的几位学员, 由[iromise](https://github.com/iromise)和[40huo](https://github.com/40huo)带头编写的CTF知识维基站点. 我早先学习参与CTF竞赛的时候, CTF一直没有一个系统全面的知识索引. [CTF Wiki](https://ctf-wiki.github.io/ctf-wiki/)的出现能很好地帮助初学者们渡过入门的那道坎. 我也有幸主要编写了Wiki的Reverse篇. 
