@@ -998,6 +998,17 @@
 
 </details>
 
+<details>
+<summary>Day17: 了解基于变异的模糊测试技术</summary>
+
+- [x] [Mutation-Based Fuzzing](https://www.fuzzingbook.org/html/MutationFuzzer.html)
+  * 基于变异的模糊测试: 通过微小的变异, 使得输入能够有效地触发新的行为
+  * 完全的随机生成有效输入需要的运行次数极其巨大, 因此思路转变为从有效输入中进行变异获取输入
+  * 每次变异都是微小的改动, 比如插入一个字符, 删除一个字符, 翻转比特等等
+  * 我们需要去引导有价值的变异, 抛弃无效的变异, 所以这里引入覆盖率作为模糊测试的指标进行判断哪个变异更好
+
+</details>
+
 ## 相关资源
 
 * [CTF Wiki](https://ctf-wiki.github.io/ctf-wiki/): 起初是X-Man夏令营的几位学员, 由[iromise](https://github.com/iromise)和[40huo](https://github.com/40huo)带头编写的CTF知识维基站点. 我早先学习参与CTF竞赛的时候, CTF一直没有一个系统全面的知识索引. [CTF Wiki](https://ctf-wiki.github.io/ctf-wiki/)的出现能很好地帮助初学者们渡过入门的那道坎. 我也有幸主要编写了Wiki的Reverse篇. 
