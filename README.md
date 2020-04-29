@@ -1027,6 +1027,17 @@
 
 </details>
 
+<details>
+<summary>Day18: 了解灰盒模糊测试技术</summary>
+
+- [x] [Greybox Fuzzing](https://www.fuzzingbook.org/html/GreyboxFuzzer.html):
+  * AFL通过轻量级的插装来获取输入的分支覆盖情况. 如果某个输入提高了覆盖率, 那么就将它扔回种子池做更多变异. 
+  * AFL的插装是通过在每一个跳转指令处插入一小段代码, 执行时会为执行的分支分配一个唯一的标识符, 并递增该分支的计数器. 出于性能考虑值统计粗略的分支名字次数. 
+  * 插装在程序编译阶段完成, 同样对于无法插装的代码(黑盒)也能通过QEMU或Intel Pin来运行AFL
+  * `Power Schedules`: 能量调度. 用于为有趣的种子分配更多的能量, 
+
+</details>
+
 ## 相关资源
 
 * [CTF Wiki](https://ctf-wiki.github.io/ctf-wiki/): 起初是X-Man夏令营的几位学员, 由[iromise](https://github.com/iromise)和[40huo](https://github.com/40huo)带头编写的CTF知识维基站点. 我早先学习参与CTF竞赛的时候, CTF一直没有一个系统全面的知识索引. [CTF Wiki](https://ctf-wiki.github.io/ctf-wiki/)的出现能很好地帮助初学者们渡过入门的那道坎. 我也有幸主要编写了Wiki的Reverse篇. 
