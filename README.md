@@ -1075,9 +1075,46 @@
 </details>
 
 <details>
-<summary>Day19: 基本的控制流分析算法实现</summary>
+<summary>Day19: 对Python代码进行数据流前向切片</summary>
 
-- [ ] [romanofski/programslice](https://github.com/romanofski/programslice)
+- [x] [romanofski/programslice](https://github.com/romanofski/programslice)
+  * 仅实现了前向切片
+  * 程序的切片函数入口是`slice_string`. 它接受5个参数, 前3个是用于指定你要跟踪数据流的变量名以及该变量所在位置(行和偏移). 然后给定程序代码片段. 
+
+    ``` python
+    node = ast.parse(source, filename)
+    visitor = programslice.visitor.LineDependencyVisitor()
+    visitor.visit(node)
+    graph = visitor.graph
+    if graph:
+        start = programslice.graph.Edge(varname, currentline, offset)
+        result = programslice.graph.Slice(graph)(start)
+    return formatter(result, source)()
+    ```
+
+  * 分析和遍历是借助模块`ast`来实现的. 通过继承`ast.NodeVisitor`实现`LineDependencyVisitor`类, 并重写了`visit_FunctionDef`和`visit_Name`方法. 
+    * 重写`visit_FunctionDef`只是单纯清空了保存的`writes`和`reads`字典. 这是避免函数之间的结果冲突. (也就是还不支持跨函数的分析)
+    * `visit_Name`则是关联的重要步骤. 因为通过`ast`我们可以遍历语法树里的节点, 对于数据流分析, 如果仅仅是关注某个变量的数据流向, 那么只需要关注`read`和`write`. 同时表现也就是`ast.Load`和`ast.Store`. 那么在遍历到这样的情况后, 就可以进行关联.
+  * 关联后得到`graph`. 然后根据给定的起始变量`varname`和它所在行和偏移, 进行前向切片得到`result`
+  * 因为边的关联都在`graph`里关联好了, 所以在指定好变量后, 前向切片也不过是从指定的边开始, 匹配所有相关的边而已. 这里使用了深度优先的方法进行遍历. 
+
+    ``` python
+    visited = [edge]
+    children = deque(self.graph.get(edge))
+    if not children:
+        return []
+
+    while children:
+        edge = children.popleft()
+        if isinstance(edge, Graph) and edge not in visited:
+            slice = Slice(edge)
+            visited.extend(slice(edge.first))
+        elif edge not in visited:
+            children.extend(deque(self.graph.get(edge)))
+            visited.append(edge)
+
+    return visited
+    ```
 
 </details>
 
