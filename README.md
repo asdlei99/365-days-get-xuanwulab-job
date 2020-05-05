@@ -1118,7 +1118,7 @@
 
 </details>
 
-<details> <summary>Day19: 详细阅读并总结e9patch的论文内容</summary>
+<details> <summary>Day20: 详细阅读并总结e9patch的论文内容</summary>
 
 > 项目地址: [e9patch](https://github.com/GJDuck/e9patch): A Powerful Static Binary Rewriter
 
