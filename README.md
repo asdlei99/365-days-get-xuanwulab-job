@@ -1118,6 +1118,14 @@
 
 </details>
 
+<details> <summary>Day19: 详细阅读并总结e9patch的论文内容</summary>
+
+> 项目地址: [e9patch](https://github.com/GJDuck/e9patch): A Powerful Static Binary Rewriter
+
+- [x] [论文总结的PDF](assets/e9patch-summary.pdf)
+
+</details> 
+
 ## 相关资源
 
 * [CTF Wiki](https://ctf-wiki.github.io/ctf-wiki/): 起初是X-Man夏令营的几位学员, 由[iromise](https://github.com/iromise)和[40huo](https://github.com/40huo)带头编写的CTF知识维基站点. 我早先学习参与CTF竞赛的时候, CTF一直没有一个系统全面的知识索引. [CTF Wiki](https://ctf-wiki.github.io/ctf-wiki/)的出现能很好地帮助初学者们渡过入门的那道坎. 我也有幸主要编写了Wiki的Reverse篇. 
