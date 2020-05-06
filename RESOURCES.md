@@ -21,6 +21,11 @@
 - [ ] [libfuzzer-workshop](https://github.com/Dor1s/libfuzzer-workshop): Repository for materials of "Modern fuzzing of C/C++ Projects" workshop.
 - [ ] [defcon_27_windbg_workshop](https://github.com/hugsy/defcon_27_windbg_workshop): DEFCON 27 workshop - Modern Debugging with WinDbg Preview
 - [ ] [defcon-25-workshop](https://github.com/zerosum0x0/defcon-25-workshop): Windows Post-Exploitation / Malware Forward Engineering DEF CON 25 Workshop
+- [ ] [Guy's 30 Reverse Engineering Tips & Tricks](https://blog.vastart.dev/2020/04/guys-30-reverse-engineering-tips-tricks.html): 之前在推特上有看到更新, 有的建议还蛮不错的, 不过没有仔细去看
+- [ ] [ReversingHero](https://www.reversinghero.com/): Learn Reverse Engineering by solving 15 challenges
+- [ ] [Binary Analysis Course](https://maxkersten.nl/binary-analysis-course/): 看目录还不错, 而且有蛮多实际的样本分析. 
+- [ ] [Martin's Reverse Engineering](https://martin.uy/blog/projects/reverse-engineering/): 看着是比较适合新手的教程, 捎带了些漏洞利用方面的知识
+- [ ] [XOR06](https://xor06.wordpress.com/tutorials/): XOR06写的教程, 实践性比较强
 
 ## 论文
 

@@ -1126,6 +1126,30 @@
 
 </details> 
 
+<details> <summary>Day21: 阅读逆向工程参考手册</summary>
+
+- [x] [reverse-engineering-reference-manual](https://github.com/yellowbyte/reverse-engineering-reference-manual)
+  * 内存中的值存储是小端序, 但是移入寄存器时就是大端序. 
+  * 调试寄存器(DR0-7): DR0-3用于存储硬件断点信息, DR4-5保留, DR6是状态寄存器, 其中包含发生调试时间的信息, DR7存储DR0-3的断点条件和长度.
+  * CPU尝试执行指令前会检查当前是否触发硬件断点, 如果该地址存储在DR0-3中, 且满足读/写/执行条件, 就会触发`INT1`并暂停进程
+  * IDA会显示程序的`本地函数`, `静态链接函数`和`动态链接函数`
+  * IDA函数窗口的的一些字段信息: 
+    * sagment: 该函数所属的段
+    * locals: 局部变量和保存的寄存器长度(字节)
+    * arguments: 该函数的参数长度(字节)
+    * R: 该函数会返回给调用它的函数
+    * F: far function
+    * L: 库函数
+    * S: 静态函数
+    * B: BP based frame. IDA会自动将所有的栈帧指针转变为栈变量
+    * T: 该函数包含类型信息
+    * =: 栈帧指针是最初的栈指针. 也就是指向栈帧底部.
+  * GDB的设置: `set disable-randomization off`和`set disassembly-flavor intel`
+  * `apropos <arg>`可以搜索gdb里有关`arg`的命令/文档
+  * Microsoft Visual C++编译的程序, this指针保存在ecx, 有时保存在esi, g++编译的程序, this作为函数第一个参数传入.
+
+</details> 
+
 ## 相关资源
 
 * [CTF Wiki](https://ctf-wiki.github.io/ctf-wiki/): 起初是X-Man夏令营的几位学员, 由[iromise](https://github.com/iromise)和[40huo](https://github.com/40huo)带头编写的CTF知识维基站点. 我早先学习参与CTF竞赛的时候, CTF一直没有一个系统全面的知识索引. [CTF Wiki](https://ctf-wiki.github.io/ctf-wiki/)的出现能很好地帮助初学者们渡过入门的那道坎. 我也有幸主要编写了Wiki的Reverse篇. 
