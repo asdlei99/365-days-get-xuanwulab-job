@@ -1126,7 +1126,7 @@
 
 </details> 
 
-<details> <summary>Day21: 阅读逆向工程参考手册</summary>
+<details> <summary>Day21: 阅读逆向工程参考手册和阅读IDA插件源码</summary>
 
 - [x] [reverse-engineering-reference-manual](https://github.com/yellowbyte/reverse-engineering-reference-manual)
   * 内存中的值存储是小端序, 但是移入寄存器时就是大端序. 
@@ -1147,7 +1147,13 @@
   * GDB的设置: `set disable-randomization off`和`set disassembly-flavor intel`
   * `apropos <arg>`可以搜索gdb里有关`arg`的命令/文档
   * Microsoft Visual C++编译的程序, this指针保存在ecx, 有时保存在esi, g++编译的程序, this作为函数第一个参数传入.
-
+- [x] [findcrypt-yara](https://github.com/polymorf/findcrypt-yara): 实际上YARA规则来自于另一个开源项目[Yara-Rules](https://github.com/Yara-Rules/rules)里的crypto规则. 插件只是进行了yara匹配把结果显示出来. 
+- [x] [ida_yara](https://github.com/alexander-hanel/ida_yara): 利用了yara, 需要手动提供要匹配的字符串或十六进制值, 或者也可以正则, 作者用来搜索IDB里的数据, 但是没有很好的规则只能手动写匹配的话, 适用性有点差. 还不如不要做成IDA插件, 单独利用yara写一个脚本来做通用性的更好些. 
+- [x] [ALLirt](https://github.com/push0ebp/ALLirt): libc转换为FLIRT特征是通过flair工具来实现的, 主要是`pelf`和`sigmake`. 另外有一个py库`patoolib`支持多种格式文件的解压还蛮不错. 
+  * 创建.pat文件: `./pelf -p64 /usr/lib/x86_64-linux-gnu/libc.a libc.pat`
+  * 创建.sig文件: `./sigmake -n <libname> libc.pat libc.sig`
+- [x] [IDAFuzzy](https://github.com/Ga-ryo/IDAFuzzy): IDA的模糊搜索插件. 模糊搜索功能由[fuzzywuzzy](https://github.com/seatgeek/fuzzywuzzy)库实现, 这个库的使用也很简单, 可以进行字符串之间的模糊匹配评分, 也可以根据一个字符串从一堆字符串中选出相似的结果.
+- [ ] 
 </details> 
 
 ## 相关资源
