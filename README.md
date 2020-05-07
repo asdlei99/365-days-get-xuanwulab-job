@@ -1156,7 +1156,7 @@
 
 </details> 
 
-<details> <summary>Day22: 学习熊英飞的软件分析技术课程</summary>
+<details> <summary>Day22: 学习熊英飞老师的软件分析技术课程</summary>
 
 > 熊老师的Software Analysis课程主页: [传送门](https://xiongyingfei.github.io/SA/2019/main.htm#info)
 
