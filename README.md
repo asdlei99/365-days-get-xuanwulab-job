@@ -1153,7 +1153,15 @@
   * 创建.pat文件: `./pelf -p64 /usr/lib/x86_64-linux-gnu/libc.a libc.pat`
   * 创建.sig文件: `./sigmake -n <libname> libc.pat libc.sig`
 - [x] [IDAFuzzy](https://github.com/Ga-ryo/IDAFuzzy): IDA的模糊搜索插件. 模糊搜索功能由[fuzzywuzzy](https://github.com/seatgeek/fuzzywuzzy)库实现, 这个库的使用也很简单, 可以进行字符串之间的模糊匹配评分, 也可以根据一个字符串从一堆字符串中选出相似的结果.
-- [ ] 
+
+</details> 
+
+<details> <summary>Day22: 学习熊英飞的软件分析技术课程</summary>
+
+> 熊老师的Software Analysis课程主页: [传送门](https://xiongyingfei.github.io/SA/2019/main.htm#info)
+
+- [ ] [课程介绍](https://xiongyingfei.github.io/SA/2019/01_intro.pdf):
+
 </details> 
 
 ## 相关资源
