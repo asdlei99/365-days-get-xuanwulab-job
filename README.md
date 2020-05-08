@@ -1188,6 +1188,67 @@
 
 </details> 
 
+<details> <summary>Day23: 学习高级二进制代码反混淆资料和阅读混淆技术论文</summary>
+
+- [x] [Advanced Binary Deobfuscation](https://github.com/malrev/ABD):
+  * 定义: 混淆就是将程序P转换成更难提取信息的程序P'
+  * 混淆的阶段: 
+    1. 编译器前端词法分析前的`preprocessor macro source code analysis`阶段进行. 这里我理解为混淆变量名这种的技术
+    2. 后端优化时的`inline assembly obfuscation pass`进行. 这里我理解为代码膨胀插入花指令的阶段. 
+    3. 后端生成代码后的`packing binary rewriting`阶段进行. 这里我理解为加壳
+  * 从`A Tutorial on Software Obfuscation`里可以得知有分为31种已知混淆技术. 
+  * 混淆工具: 商业有`Themida`, `Code Virtualizer`, `VMProtect`, `Enigma`, `Epona`等. 学术界有`Tigress`和`O-LLVM`. 
+  * 恶意软件会在早期的传播过程中使用混淆, 例如`macro/script/dropper/downloader/beacon`. 在后阶段的`implant/agent/rookit`使用混淆. 
+  * 混淆技术的通用手法:
+    * 做无用功: 插入垃圾指令或dead code. 用于遮掩和干扰
+    * 改变语法: 替换等价指令, 编码文本和算术操作
+    * 改变语义: `Opaque Predicate`混沌不透明谓词? 控制流平坦化, 代码虚拟化
+  * 混淆技术:
+    - [x] Garbage/Dead Code Insertion: 插入不会影响预期结果的指令, 通常会结合其他混淆技术
+    - [x] Instruction Substitution: 将指令替换成等价的, 更复杂的指令
+    - [x] Encode Literals: 将文本信息(常量, 字符串等))替换成更复杂的表达. 比如将"helloworld"拆分成单个字母串起来. 
+    - [x] Encode Arithmetic/Mixed Boolean Arithmetic: 将算术操作/布尔逻辑替换成更复杂的表达. 比如a+b, 转换成a-(-b)
+    - [x] Opaque Predicate: 对于没有分支的地方, 加一个永远也不会触发的分支. 可以通过插入一个确定性的操作实现. 比如说`cmp eax, 0xfffffff`, 强行增加一个分支出来. (或者利用其他的恒等式/恒不等式)
+    - [x] Virtualization Obfuscation: 将代码替换为虚拟机的字节码, 由虚拟机解释执行. 
+    - [x] Control Flow Flattening: 利用switch语句, 让平坦化的每一个基本块都有一个索引, 根据索引跳到下一个基本块, 执行基本块时更新索引, 这样就能使得跳到switch同级的不同基本块去.
+  * 解混淆技术:
+    * 途径: 
+      * 简化: 将代码转换成可读的形式
+      * 消除: 移除冗余代码
+      * 动态分析: 避免直接阅读混淆代码
+    * 技术栈: `数据流分析`, `符号执行`, `等价性检查`, `抽象解释`, `程序生成`, `污点分析`
+  * 解混淆针对混淆技术各个阶段的策略:
+    * 做无用功 <- 数据流分析(存活性分析)
+    * 改变语法 <- 数据流分析(可达性分析)
+    * 改变语义 <- 符号执行, 等价性检查, VMHunt, 程序生成, 图特征匹配.
+  * 程序分析的工具: IDA, radare2, Binary Ninja, angr, BINSEC, Triton, Miasm, McSema等
+  * 程序分析前后端:
+
+  ![abd-binary-analysis-architecture.png](assets/abd-binary-analysis-architecture.png)
+
+  * 中间表示(IR): 
+    * IR的目的是为了方便进行二进制代码的分析
+    * IR能帮助处理多种架构的代码(平台无关).
+    * IR通常是SSA格式: 每个变量仅分配一次, 在使用前定义. 这个属性能帮助优化和转换. (能帮助消除歧义)
+    * IR也有难以建模的地方, 因此不能完全等价于原来的代码, 只能做到近似. 
+  - [x] 数据流分析(我要回去看下南大李老师的视频解说)
+    - [x] 可达性分析:
+      * 前向数据流分析
+      * 分析程序到达某个点P时, 变量x的值于何处被定义
+      * 应用: `Constant propagation/folding`, `Transform expressions`
+    - [x] 存活性分析
+      * 后向数据流分析
+      * 分析从p起始的边到x时, 在p点x的值是否可用. 
+      * 应用: 消除死代码
+    - [x] 限制
+      * 保守方法: 保留了程序语义, 假定传递程序的整个路径
+      * 流敏感, 路径不敏感: 会注重指令的顺序, 不注重条件分支
+      * 如何干扰数据流分析? 
+        * 插入不透明谓词
+        * 因为数据流分析不关注哪条路径被实际执行了,
+
+</details> 
+
 ## 相关资源
 
 * [CTF Wiki](https://ctf-wiki.github.io/ctf-wiki/): 起初是X-Man夏令营的几位学员, 由[iromise](https://github.com/iromise)和[40huo](https://github.com/40huo)带头编写的CTF知识维基站点. 我早先学习参与CTF竞赛的时候, CTF一直没有一个系统全面的知识索引. [CTF Wiki](https://ctf-wiki.github.io/ctf-wiki/)的出现能很好地帮助初学者们渡过入门的那道坎. 我也有幸主要编写了Wiki的Reverse篇. 
