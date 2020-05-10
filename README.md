@@ -1250,7 +1250,7 @@
 </details> 
 
 
-<details> <summary>Day24: 阅读混淆技术论文</summary> 
+<details> <summary>Day24: 阅读混淆技术论文综述部分内容</summary> 
 
 - [x] [A Tutorial on Software Obfuscation](https://mediatum.ub.tum.de/doc/1367533/file.pdf)
   * 混淆工具输入程序输出功能等效但是更难理解和分析的另一个程序. 一些经典的编译器优化选项也被认为是混淆的一种, 因为它为了使代码更高效而将开发人员易于理解的代码替换成其他代码. 
@@ -1293,7 +1293,15 @@
       * 被动攻击: 不会对程序代码或数据进行任何更改, 比如从程序中提取密钥和密码不会更改任何代码
       * 主动攻击: 会更改程序的代码或数据, 例如删除数据/代码的完整性检查相关代码. 
 
-</details> 
+</details>
+
+<details> <summary>Day25: 了解各类混淆技术/深度学习解混淆/ABD实验</summary>
+
+- [ ] [A Tutorial on Software Obfuscation](https://mediatum.ub.tum.de/doc/1367533/file.pdf)
+- [ ] [Advanced Binary Deobfuscation](https://github.com/malrev/ABD)
+- [ ] [Deobfuscating Android Applications through Deep Learning](https://pdfs.semanticscholar.org/8587/79f77d4934ddab0552fc6817f85d2bc32926.pdf)
+
+</details>
 
 ## 相关资源
 
