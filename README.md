@@ -1297,7 +1297,7 @@
 
 <details> <summary>Day25: 了解各类混淆转换技术以及对应对抗方法</summary>
 
-- [ ] [A Tutorial on Software Obfuscation](https://mediatum.ub.tum.de/doc/1367533/file.pdf)
+- [x] [A Tutorial on Software Obfuscation](https://mediatum.ub.tum.de/doc/1367533/file.pdf)
   - [x] Constant Data Transformations
     - [x] Opaque predicates
       * 不透明谓词其实就是一个结果固定不变的表达式, 但攻击者很难静态推断这个结果. 
@@ -1425,13 +1425,33 @@
     - [x] Branch functions
       * 思路: 通过对`所谓分支函数的调用`, 从静态反汇编算法中隐藏`函数调用的控制流/有条件跳转/无条件跳转`. 分支函数就是一个根据给定参数, 跳转到对应的分支目标位置的函数(比如指令为无条件跳转`jmp L1`, 那么参数为`L1`, 就会跳向`L1`所在的地址偏移), 也就是将`jmp L1`换成`push L1; call branch_function` (这里对于有条件跳转, 应该还有函数返回地址的处理)
       * 同样能达到平坦化的效果, 只是平坦的对象从switch变为了分支函数(branch function)
-  - [ ] Code Abstraction Transformations
-    - [ ] Merging and splitting functions
-    - [ ] Remove comments and change formatting
-    - [ ] Scrambling identifier names
-    - [ ] Removing library calls and programming idioms
-    - [ ] Modify inheritance relations
-    - [ ] Function argument randomization
+      * 对抗方法: 提出静态语义方法来绕过分支函数, 以便在很大程度上分解使用该转换混淆的代码.
+  - [x] Code Abstraction Transformations
+    - [x] Merging and splitting functions
+      * 思路: 类似于`合并/拆分`变量, 这里以函数为单位进行合并/拆分
+      * 对抗方法: 提出一种静态语义攻击方法来针对`函数合并`混淆. 其会检测属于不同函数的代码行位置并将其提取到单独的函数中去.
+    - [x] Remove comments and change formatting
+      * 思路: 删除所有`注释/空格/制表符/换行符`. 仅适用于源代码交付的程序(比如Javascript, HTML等)
+      * 对抗方法: 原始的格式和注释无法恢复, 但是可以很轻松地恢复对齐格式. 研究者基于对大型代码库的概率学习, 提出了针对此的代码理解攻击, 并设计了`DeGuard`应用于android程序.
+    - [x] Scrambling identifier names
+      * 思路: 将所有符号名称(`变量/常量/函数/类`等)替换为`随机字符串`. 这是一种单向转换, 因为符号的名称无法由解混淆器恢复. 攻击者被迫从语义的角度理解符号的具体含义. 相比删除注释的方式, 该混淆效果更佳. 
+      * 对抗方法:  基于机器学习的攻击方法, 能够高精度地恢复有意义的标识符名称
+    - [x] Removing library calls and programming idioms
+      * 思路: 在可能的情况下, 使用自己的实现替换对外部库的依赖. 这样能避免攻击者通过检查对外部库的调用来推断程序的运行行为. 
+      * 这种转换比静态链接更强大, 因为静态链接时将库代码复制到程序文件中, 而这可以通过模式匹配的方式轻松地逆向出来. 
+      * 对抗方法: 上述针对删除注释和标识符的, 机器学习方法可以对抗该转换.
+    - [x] Modify inheritance relations
+      * 一些编程语言(比如java)会以某些中间格式存在(字节码文件), 这些中间格式最终会编译为本地代码, 其包含有用的面向对象的编程抽象. 因此很有必要去破坏中间格式里`类/结构/关系(如聚合,继承等)`所提供的抽象信息. 
+      * 实现思路: 提出`错误重构`的方法, 将没有共同行为的类都整合进同一个父类里. 有研究者进一步扩展了开方法, 提出了`类层次结构平坦化`的方法, 创建了一个`包含所有类的所有方法的通用接口`, 所有类都实现此公共接口但彼此间没有任何关系. 这样能有效地破坏类的层次结构, 并迫使攻击者分析代码.
+      * 对抗方法: 暂无
+    - [x] Function argument randomization
+      * 思路: 随机化一个方法的`形参顺序`并`插入伪造参数`. 该技术在`Tigress`中得到了应用.
+      * 该转换的目的是在大量不同的实例中`隐藏通用函数签名`
+      * 对于不提供外部接口的程序, 能很好地应用该转换. 但是对于提供外部接口的库来说, 这样会更改`库的接口`, 并且使用该库的所有对应程序也必须进行更新. 
+      * 该转换的抵御能力和成本都很低, 但是可以通过结合`编码算术操作`的转换, 从而使得函数内部的计算依赖于随机添加的自变量, 以此来提高抵御能力. 
+      * 对抗方法: 提出的一种静态代码理解攻击能绕过该转换.
+
+  ![overview-of-the-classification-of-obfuscation.png](assets/overview-of-the-classification-of-obfuscation.png)
 
 </details>
 
