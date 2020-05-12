@@ -1504,6 +1504,31 @@
 
 </details>
 
+<details> <summary>Day27: 阅读跨架构二进制代码复用检测论文</summary>
+
+> 传送门: [Semantic-Based Representation Binary Clone Detection for Cross-Architectures in the Internet of Things](https://www.mdpi.com/2076-3417/9/16/3283/pdf)
+
+- [x] 摘要:
+  * 许多二进制克隆检测方法不适合各种编译器选项和不同的体系架构.
+  * 有些检测方法能应对不同架构, 但是依赖于先验知识人工提取的特征来生成特征向量, 并且无法从语义角度进行特征之间的内部关联
+  * GeneDiff利用NLP的`表示模型`, 为基于IR的每个函数生成`高维数值矢量`. 能应对各种编译优化选项和体系架构.
+- [x] 介绍:
+  * 论文使用受`PV-DM`神经网络启发的`语义表示模型`来解决克隆检测问题. 在此模型里, 指令对应于单词, 基本块对应于句子. 函数对应于段落. `PV-DM`神经网络可以学习每个单词和每个段落的矢量表示, 并将单词的相似含义映射到矢量空间的相似位置. 并且利用NLP能共享许多共性, 比如语义提取, 分类和相似性比较. 
+  * GeneDIff使用大量二进制文件来训练`语义表示模型`. 然后利用`表示模型`将来自不同架构的二进制映射为`高维数值向量`. 通过计算`余弦距离`来评估函数高维向量之间的相似性作为评判得分. 
+- [x] 问题定义: 
+  * 关注函数级别的复用问题. 如果在源码里采用了相似的函数逻辑, 那么其汇编函数就是语义相似的(语法可能略有不同)
+  * 给定来自`{X86, ARM, MIPS, AMD64, AArch64, MIPS64}`的二进制文件, 研究的问题就是要针对二进制文件的每个汇编函数来匹配存储库里前K个语义相似的函数.
+* GeneDiff的流水线图示:
+
+  ![genediff-flowchart](assets/genediff-flowchart.png)
+
+* GeneDiff组件构成:
+
+  ![genediff-components.png](assets/genediff-components.png)
+
+
+</details>
+
 ## 相关资源
 
 * [CTF Wiki](https://ctf-wiki.github.io/ctf-wiki/): 起初是X-Man夏令营的几位学员, 由[iromise](https://github.com/iromise)和[40huo](https://github.com/40huo)带头编写的CTF知识维基站点. 我早先学习参与CTF竞赛的时候, CTF一直没有一个系统全面的知识索引. [CTF Wiki](https://ctf-wiki.github.io/ctf-wiki/)的出现能很好地帮助初学者们渡过入门的那道坎. 我也有幸主要编写了Wiki的Reverse篇. 
