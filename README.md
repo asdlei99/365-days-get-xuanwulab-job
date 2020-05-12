@@ -1526,6 +1526,12 @@
 
   ![genediff-components.png](assets/genediff-components.png)
 
+- [x] Word and Paragraph Embedding: PV-DM是`word2vec`的扩展, 专为段落向量和单词向量而设计. 训练好的PV-DM模型可以根据段落中的单词为每个段落生成段落语义矢量, 这些段落语义矢量可用于段落级别的语义分析和相似性分析. 
+* 论文里`PV-DM`的引用: 将每条VEX指令视为一个字母, 将VEX指令的组合视为单词, 基本块视为句子. 函数视为段落. 函数向量的提取有以下问题: 1. 函数之间的调用关系很复杂. 2. 函数的执行流具有多个路径. 3. 每个表达式由多个部分组成. 
+* GeneDiff解决函数向量提取的措施:
+  1. Callee expansion: 解决编译器优化中函数内联造成的问题(这会实质性地改变控制流). 
+  2. Multi-path generation: 通过确保函数基本块全覆盖来生成多条路径. 
+  3. Training model: 将每条路径作为输入, 基于语义训练一个表示学习模型, 并将指令和函数映射到高维向量中.
 
 </details>
 
