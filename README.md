@@ -1535,6 +1535,34 @@
 
 </details>
 
+<details> <summary>Day28: 阅读机器学习APK解混淆论文和代码克隆检测进展</summary> 
+
+> 传送门: [Deobfuscating Android Applications through Deep Learning](https://pdfs.semanticscholar.org/8587/79f77d4934ddab0552fc6817f85d2bc32926.pdf)
+
+- [x] 介绍:
+  * 论文应用了递归神经网络和深度学习. Macneto通过`topic modeling`学习代码的深层语义来进行解混淆. `topic model`是程序行为的表征, 不受代码布局,CFG结构,元数据等的影响.
+- [x] 背景知识:
+  * Lexical transformations: 进行标识符(方法/类/变量名)的替换.
+  * Control transformations: 内联代码, 分割方法, 重排语句, 添加跳转和其他指令等.
+  * Data transformations: 字符串加密, 更改数据结构类型等.
+- [x] 概览:
+  * 四个阶段:
+    1. 计算指令分布: 将方法解析为指令的分布, 类似文档的词频向量. 不仅考虑方法内的指令, 还考虑callee的指令, 认为这样能更深入地理解行为语义
+    2. 机器主题建模: 从指令分布汇总识别机器主题. 这些机器主题表征方法的语义. 
+    3. 学习: 使用两层RNN, 输入指令分布, 输出机器主题的分布. 
+    4. 解混淆: 给定混淆的函数, 训练好的模型会推断其主题分布, 然后尝试查找具有相似主题分布的一组原始方法.
+
+  ![macneto-overview.png](assets/macneto-overview.png)
+- [x] 实现: 
+  1. 递归地标记所有的callee函数并使用词频分布来计算指令分布.
+  2. 使用图扩散算法识别原始方法与混淆方法之间的callee差异.
+
+> 传送门: [代码克隆检测研究进展](https://xin-xia.github.io/publication/rjxb181.pdf)
+
+
+</details> 
+
+
 ## 相关资源
 
 * [CTF Wiki](https://ctf-wiki.github.io/ctf-wiki/): 起初是X-Man夏令营的几位学员, 由[iromise](https://github.com/iromise)和[40huo](https://github.com/40huo)带头编写的CTF知识维基站点. 我早先学习参与CTF竞赛的时候, CTF一直没有一个系统全面的知识索引. [CTF Wiki](https://ctf-wiki.github.io/ctf-wiki/)的出现能很好地帮助初学者们渡过入门的那道坎. 我也有幸主要编写了Wiki的Reverse篇. 
