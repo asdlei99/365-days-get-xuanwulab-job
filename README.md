@@ -1592,6 +1592,11 @@
 
 </details> 
 
+<details> <summary>Day29: 收集二进制代码克隆检测的论文资料</summary> 
+
+![binary-code-clone-detect-papers.png](assets/binary-code-clone-detect-papers.png)
+
+</details> 
 
 ## 相关资源
 
