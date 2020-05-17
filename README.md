@@ -1634,6 +1634,38 @@
 - [x] Benchmark
   * 2007年Bellon通过两个小型C程序和两个小型Java程序运行6个不同的代码克隆工具而收集的
   * 近年, BigCloneBench是IJaDataset-2.0(一个包含25,000个开源Java系统的大数据软件存储库)中800万个经过验证的克隆数据集. 包括四种主要克隆类型的项目内和项目间克隆.
+- [x] [Open-source tools and benchmarks for code-clone detection: past, present, and future trends](https://dl.acm.org/doi/abs/10.1145/3381307.3381310)
+  * Textual: 比较代码片段的`文本/字符串/词素`
+  * Token-Based Approaches: 词法分析将源代码划分成一系列的token. 匹配token序列
+  * Syntactical Approaches: 基于`树`或基于`尺度`. 基于树则是指AST, 用子树来识别相似区域. 基于尺度则是从源代码收集各种尺度来创建单独的向量, 通过比较向量来找到相似区域
+  * Semantic Approaches: 主要基于图. 构造程序依赖图(PDG)来表示源代码的控制流和数据流. 比较两个PDG来识别程序两个版本之间语法和语义的差异. 
+  * Learning Approaches: 分为机器学习和其他基于学习的技术. 跟学习方法类似的还有数据挖掘的方法. 
+
+</details> 
+
+<details> <summary>Day31: 速览代码相似性检测论文</summary>
+
+- [x] RetroWrite: Statically Instrumenting COTS Binaries for Fuzzing and Sanitization
+- [x] Detecting Code Clones with Graph Neural Network and Flow-Augmented Abstract Syntax Tree: 提出了增强AST的想法, 增加了next关联以及`if/while/for/seq`结构的关联
+- [x] Semantic Representation Learning of Code based on Visualization and Transfer Learning Patrick: 将源代码结构转换成图片(提取视觉结构), 通过训练好的图片分类神经网络生成代表图像结构信息的特征矢量. 得到特征矢量后再训练一个分类器用于分类或克隆检测. 
+  * Plain Text: 将代码的纯文本表示形式渲染为黑白图像
+  * Color Syntax Highlighting: 在纯文本的基础上增加代码高亮
+  * Geometric Syntax Highlighting: 将语法关键字用特定的几何形状来表示(用于标记).
+  * Ast in Condensed Format: 对AST进行可视化渲染. 
+- [x] Clone Detection on Large Scala Codebases
+  * SourcererCC: 将代码片段表示为一堆token, 通过比较token的重叠程度来评估相似度. 
+  * AUTOENCODE: 使用`标识符`, `AST`, `字节码`, `CFG`生成嵌入输入给深度学习模型. 通过计算距离来评估相似度
+- [x] DEEPBINDIFF: Learning Program-Wide Code Representations for Binary Diffing Yue
+  * Bindiff: 在call graph和cfg上进行图的同构检测, 并通过`函数名/图边MD索引`来匹配函数和基本块.
+  * DeepBindiff: 提取ICFG(过程间CFG). 还通过每个基本块生成特征向量, 也就是生成token嵌入和生成特征向量. token是取的操作码和操作数. 
+- [x] Similarity Metric Method for Binary Basic Blocks of Cross-Instruction Set Architecture
+  * 8个特征: 字符串常量, 数字常量, 转移指令数量, 调用数量, 指令数量, 算术指令数量, 子孙数量, 中间块
+  * 汇编指令的标准化:
+    * 常量: 立即数, 地址, 变量名, 函数名, 基本块标签
+    * 寄存器: x86有14类寄存器 ARM被标准化为2类
+- [x] Asm2Vec: Boosting Static Representation Robustness for Binary Clone Search against Code Obfuscation and Compiler Optimization Steven
+  * 将CFG拆分成序列, 这里的序列是一个可能的执行路径.
+  * 对于一个序列, 通过PV-DM, 用序列中相邻的指令去预测中间的汇编指令. 以此来训练.
 
 </details> 
 
