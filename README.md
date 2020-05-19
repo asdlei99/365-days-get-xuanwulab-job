@@ -1669,6 +1669,23 @@
 
 </details> 
 
+<details> <summary>Day32: 阅读20年S&P最佳实践论文</summary>
+
+> 传送门: [An Analysis of Pre-installed Android Software](https://arxiv.org/pdf/1905.02713.pdf)
+
+- [x] Data Collection:
+  * 使用Firmware Scanner做固件扫描, 使用Lumen来获得网络流数据. 
+- [x] ECOSYSTEM OVERVIEW:
+  * 首先分析预装APK里的证书, 通过证书将APK进行聚类, 用证书里的`Issuer`字段来区分组织. 不过厂商可以使用多个证书, 并且这些证书并非完全可信
+  * 实践中有遇到使用`Android Debug`证书签名的APK, 这是开发时用的调试证书. 也有的证书仅提及`Android`未明确表明组织
+  * 使用LibRadar++来识别APK中使用的第三方库. 预装的APK中存在第三方库的话, 是有风险监控到用户活动的. 实践表明存在第三方库, 比如Facebook的SDK有部分由设备厂商签名, 部分由运营商签名, 只有小部分由Facebook签名. 同样对于中国的一些SDK, 实践表明只有极小部分是由实际的第三方服务提供商签名, 也就意味着第三方库的引用决定在于APK的开发者. 
+  * 对Google Play的APK进行爬取, 来判断有多少Android固件中预装的APK能在应用商店里公开获得. 实践表明只有9%的APK能在Google Play商店找到, 而找到的这部分也很少是预装APK的范畴, 主要是一些通信/娱乐/工具等的通用性APK
+  * 使用Androguard提取APK里声明和请求的权限. 主要关注自定义权限, 因为预装的服务具有对系统资源的特权访问, 并且预装服务可能(非用户自愿地)公开关键服务和数据, 甚至绕过ANdroid的官方权限
+- [x] Behavioral Analysis
+  * 集成各种静态分析工具, 比如Androwarn, FlowDroid, Amandroid, APktool, Androguard.
+
+</details> 
+
 ## 相关资源
 
 * [CTF Wiki](https://ctf-wiki.github.io/ctf-wiki/): 起初是X-Man夏令营的几位学员, 由[iromise](https://github.com/iromise)和[40huo](https://github.com/40huo)带头编写的CTF知识维基站点. 我早先学习参与CTF竞赛的时候, CTF一直没有一个系统全面的知识索引. [CTF Wiki](https://ctf-wiki.github.io/ctf-wiki/)的出现能很好地帮助初学者们渡过入门的那道坎. 我也有幸主要编写了Wiki的Reverse篇. 
