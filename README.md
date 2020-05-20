@@ -1686,7 +1686,7 @@
 
 </details> 
 
-<details> <summary>Day33: 阅读相似性检测论文 LibDX / FA-AST / </summary>
+<details> <summary>Day33: 阅读相似性检测论文 LibDX/FA-AST/科恩</summary>
 
 > 传送门: [LibDX: A Cross-Platform and Accurate System to Detect Third-Party Libraries in Binary Code](https://ieeexplore.ieee.org/document/9054845)
 
@@ -1699,6 +1699,25 @@
 * 利用文件的只读数据段, linux的`.rodata`, windows的`.rdata`, macos的`__cstring`. 
 
 > 传送门: [Detecting Code Clones with Graph Neural Network and Flow-Augmented Abstract Syntax Tree](https://arxiv.org/pdf/2002.08653.pdf)
+
+* 使用显式控制和数据流边缘扩展原始的AST来构造增强的FA-AST, 然后在FA-AST上应用两种不同的图神经网络来测量代码对的相似性. 
+* 传统基于深度学习的方法: 使用神经网络为每个代码片段计算向量表示, 然后计算两个代码向量表示之间的相似度以检测克隆. 
+* 尽管AST可以反映语法的结构信息, 但是不包含某些语义信息比如控制流和数据流
+* 论文方法: 首先为程序创建图形表示, 然后使用图神经网络为代码片段计算矢量表示, 最后通过测量代码向量表示的相似性来测量代码相似性. 使用的两种GNN模型: 门控图神经网络GGNN和图匹配网络GMN. GGNN用于计算不同代码片段的向量表示, GMN用于测量代码对的向量表示的相似性. 
+
+> 传送门: [Order Matters: Semantic-Aware Neural Networks for Binary Code Similarity Detection](https://keenlab.tencent.com/en/whitepapers/Ordermatters.pdf)
+
+* 论文提出了语义感知的神经网络来提取二进制的语义信息, 使用BERT对token级, block级和两个graph级别的任务进行与训练. 此外, 发现CFG节点的顺序对于图相似度检测很重要, 因此论文在邻接矩阵上采用CNN来提取顺序信息. 
+* Gemini: 将CFG里的各个基本块转换成手动选取特征代替的另一种块(用特征向量来代替基本块), 然后用Structure2vec来生成图嵌入, 最后添加siamese架构来计算相似度.
+  * 问题1: 每个块都用一个手动选取特征的低维向量表示, 这会导致大量的语义信息丢失. 
+  * 问题2: 节点的顺序在二进制函数的表示中起了重要做哟个. 
+  * 论文要点: 提出了语义感知模型, 结构感知模型和次序感知模型
+* 语义感知模型: 使用NLP提取二进制代码的语义信息, CFG基本块中的token被视为单词, 而基本块视为句子. 论文使用BERT来对token和block进行预训练. 然后在标记语言模型任务(MLM)上标记要预训练的token, 并在邻接节点预测任务(ANP)上提取所有即将与训练的相邻基本块. 
+* 另外还有两个图级的任务:
+  * BIG(block inside graph task): 确定两个采样的基本块是否在同一个图内
+  * GC(graph classification task): 区分该基本块属于哪一个平台/优化. 
+* 结构感知模型: 结合使用MPNN和GRU来更新函数. 
+* 次序感知模型: 设计了一个邻接矩阵来记录各个基本块的次序. 次序感知基于的前提是实践观察到其变化很小, 因此将该信息进行捕捉. 
 
 </details> 
 
