@@ -1686,6 +1686,22 @@
 
 </details> 
 
+<details> <summary>Day33: 阅读相似性检测论文 LibDX / FA-AST / </summary>
+
+> 传送门: [LibDX: A Cross-Platform and Accurate System to Detect Third-Party Libraries in Binary Code](https://ieeexplore.ieee.org/document/9054845)
+
+* LibDX: 从第三方程序包二进制中`识别出特征文件`, `提取特征`和`建立胎记`并最终构建一个`特征数据库`. 拿到样本的时候就提取特征跟数据库进行匹配. 由于匹配的时候会因为规模庞大, 因此LibDX的解决方案是识别逻辑功能块, 然后生成目标的基因图进行筛选. 
+* LibDX需要处理多种文件架构和特征冗余的问题. 对于多种架构, LibDX试图提取平台无关的指纹做参考. 而特征冗余. LibDX使用的是源代码和二进制代码之间均不变的字符串常量做特征, 但是对于内部的代码复用是难以解决的. 这里分为两种: `父子节点`和`变体库`
+  * 父子节点就是, 子节点未LibPNG, 父节点为OpenCV. 存在可能报告LibPNG的时候把父节点也匹配出来. 解决方案是分层. 
+  * 变体库: 比如libijg是在libjpeg基础上重新开发, 这之间仅存在细微的差别, 所以应该将变种库的打分跟原始库一致
+* 一些字符串常量在多个库中重复, 但不是由代码克隆而引起的. 比如有的字符串常出现在内存里, 因此需要一种权重函数来减少经常使用的字符串所贡献的分数. 
+* 字符串的权重使用TF-IDF系数进行计算
+* 利用文件的只读数据段, linux的`.rodata`, windows的`.rdata`, macos的`__cstring`. 
+
+> 传送门: [Detecting Code Clones with Graph Neural Network and Flow-Augmented Abstract Syntax Tree](https://arxiv.org/pdf/2002.08653.pdf)
+
+</details> 
+
 ## 相关资源
 
 * [CTF Wiki](https://ctf-wiki.github.io/ctf-wiki/): 起初是X-Man夏令营的几位学员, 由[iromise](https://github.com/iromise)和[40huo](https://github.com/40huo)带头编写的CTF知识维基站点. 我早先学习参与CTF竞赛的时候, CTF一直没有一个系统全面的知识索引. [CTF Wiki](https://ctf-wiki.github.io/ctf-wiki/)的出现能很好地帮助初学者们渡过入门的那道坎. 我也有幸主要编写了Wiki的Reverse篇. 
