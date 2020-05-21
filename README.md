@@ -1721,6 +1721,25 @@
 
 </details> 
 
+<details> <summary>Day34: 阅读相似性检测论文 NMT / Cross-Architecture Embedding</summary>
+
+> 传送门: [Similarity Metric Method for Binary Basic Blocks of Cross-Instruction Set Architecture](https://www.ndss-symposium.org/wp-content/uploads/bar2020-23002.pdf)
+
+* 论文使用NMT(神经机器翻译)模型连接两个ISA的基本块, 提出的嵌入模型可以将来自任意ISA的基本块的丰富语义映射到固定维的向量中. 
+* NMT模型: 建立在seq2seq架构上, 该架构包括`编码器`和`解码器`. 编码器将源文本编码为`上下文矩阵`, 解码器将`上下文矩阵`解码为目标文本. 在理想情况下(也就是源文本能够无损地翻译为目标文本), 上下文矩阵可以完整地包含源文本和目标文本的语义信息. 
+* 论文建立了NMT模型将x86的基本块转换成ARM. 将这中间的上下文矩阵转换成固定维的向量来生成块嵌入. 然后通过块嵌入的相似性进行评估. 
+* 汇编指令的标准化方法: 将常量分为`立即数/地址/变量名/函数名/基本块标签`进行符号化. 类似地寄存器也有集中类型的符号表示. 
+
+> 传送门: [A Cross-Architecture Instruction Embedding Model for Natural Language Processing-Inspired Binary Code Analysis](https://arxiv.org/pdf/1812.09652.pdf)
+
+* 论文希望使得行为类似的指令(无论属于何种架构)都能具有相近的嵌入, 因此提出了`联合学习`的方法来生成嵌入. 该嵌入不仅能捕获架构内指令的语义, 也能捕获跨架构的语义关系. 
+* 传统方法: 基于字符串, AST, token, PDG
+* 论文构建指令模型, 希望学习到的跨体系结构指令嵌入, 不仅在单体系结构上保留聚类属性, 还要展现出不同体系结构之间的语义关联关系. 
+* 对于NLP的OOV问题, 需要处理常量/地址偏移/标签/字符串等值. 解决方法就是符号化.
+* 论文里将多种架构里的指令语义进行了相互关联预测. 比如对于两个上下文中, x86的指令跟arm的指令语义相同, 那么就可以用arm指令周围的指令来预测x86的等效指令. 但这里就需要找到指令的语义等价连接, 可以使用操作码对齐的方式, 然后通过DP的最长公共子序列来确定两个序列之间的最佳比对. 
+
+</details> 
+
 ## 相关资源
 
 * [CTF Wiki](https://ctf-wiki.github.io/ctf-wiki/): 起初是X-Man夏令营的几位学员, 由[iromise](https://github.com/iromise)和[40huo](https://github.com/40huo)带头编写的CTF知识维基站点. 我早先学习参与CTF竞赛的时候, CTF一直没有一个系统全面的知识索引. [CTF Wiki](https://ctf-wiki.github.io/ctf-wiki/)的出现能很好地帮助初学者们渡过入门的那道坎. 我也有幸主要编写了Wiki的Reverse篇. 
