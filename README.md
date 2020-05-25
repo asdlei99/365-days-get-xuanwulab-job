@@ -1598,7 +1598,7 @@
 
 </details> 
 
-<details> <summary>Day30: 阅读代码相似性检测论文</summary> 
+<details> <summary>Day30-31: 阅读代码相似性检测论文</summary> 
 
 > 传送门: [Open-source tools and benchmarks for code-clone detection: past, present, and future trends](https://dl.acm.org/doi/abs/10.1145/3381307.3381310)
 
@@ -1641,10 +1641,6 @@
   * Semantic Approaches: 主要基于图. 构造程序依赖图(PDG)来表示源代码的控制流和数据流. 比较两个PDG来识别程序两个版本之间语法和语义的差异. 
   * Learning Approaches: 分为机器学习和其他基于学习的技术. 跟学习方法类似的还有数据挖掘的方法. 
 
-</details> 
-
-<details> <summary>Day31: 速览代码相似性检测论文</summary>
-
 - [x] RetroWrite: Statically Instrumenting COTS Binaries for Fuzzing and Sanitization
 - [x] Detecting Code Clones with Graph Neural Network and Flow-Augmented Abstract Syntax Tree: 提出了增强AST的想法, 增加了next关联以及`if/while/for/seq`结构的关联
 - [x] Semantic Representation Learning of Code based on Visualization and Transfer Learning Patrick: 将源代码结构转换成图片(提取视觉结构), 通过训练好的图片分类神经网络生成代表图像结构信息的特征矢量. 得到特征矢量后再训练一个分类器用于分类或克隆检测. 
@@ -1686,7 +1682,7 @@
 
 </details> 
 
-<details> <summary>Day33: 阅读相似性检测论文 LibDX/FA-AST/科恩</summary>
+<details> <summary>Day33-35: 阅读代码相似性检测论文</summary>
 
 > 传送门: [LibDX: A Cross-Platform and Accurate System to Detect Third-Party Libraries in Binary Code](https://ieeexplore.ieee.org/document/9054845)
 
@@ -1719,10 +1715,6 @@
 * 结构感知模型: 结合使用MPNN和GRU来更新函数. 
 * 次序感知模型: 设计了一个邻接矩阵来记录各个基本块的次序. 次序感知基于的前提是实践观察到其变化很小, 因此将该信息进行捕捉. 
 
-</details> 
-
-<details> <summary>Day34: 阅读相似性检测论文 NMT / Cross-Architecture Embedding</summary>
-
 > 传送门: [Similarity Metric Method for Binary Basic Blocks of Cross-Instruction Set Architecture](https://www.ndss-symposium.org/wp-content/uploads/bar2020-23002.pdf)
 
 * 论文使用NMT(神经机器翻译)模型连接两个ISA的基本块, 提出的嵌入模型可以将来自任意ISA的基本块的丰富语义映射到固定维的向量中. 
@@ -1738,10 +1730,6 @@
 * 对于NLP的OOV问题, 需要处理常量/地址偏移/标签/字符串等值. 解决方法就是符号化.
 * 论文里将多种架构里的指令语义进行了相互关联预测. 比如对于两个上下文中, x86的指令跟arm的指令语义相同, 那么就可以用arm指令周围的指令来预测x86的等效指令. 但这里就需要找到指令的语义等价连接, 可以使用操作码对齐的方式, 然后通过DP的最长公共子序列来确定两个序列之间的最佳比对. 
 
-</details> 
-
-<details> <summary>Day35: 阅读相似性检测论文 统计性方法</summary> 
-
 > 传送门: [Statistical similarity of binaries](https://dl.acm.org/doi/10.1145/2980983.2908126)
 
 * 论文受图的局部相似性匹配启发, 用统计的方法通过函数切片的局部匹配得分来计算全局的匹配得分. 
@@ -1753,6 +1741,20 @@
 > 传送门: [BinMatch: A Semantics-based Hybrid Approach on Binary Code Clone Analysis](https://loccs.sjtu.edu.cn/~romangol/publications/icsme18.pdf)
 
 * 使用测试用例执行模板函数并记录运行时的信息(比如函数参数), 然后将信息迁移到每个候选目标函数并模拟执行, 在执行过程中, 记录模板和目标函数的语义签名. 根据比较模板函数和每个目标函数的签名来计算相似度.
+* 语义签名, 包含以下特征
+  * 读取和写入的值: 该函数在模拟执行期间从内存读取和写入内存的全局(或静态)变量值组成. 当包含特定输入时, 它会包含函数的输入和输出值, 指示函数的语义
+  * 比较操作数值: 由比较操作的值组成. 这些操作的结果决定了模拟执行的后续控制流. 它指示了输入值生成输出的路径. 
+  * 标准库函数: 标准库为实现用户定义函数提供了基本的函数. 这个特征已被证实跟语义相关, 并对代码克隆分析有效.
+* 插装和执行
+  * 通过分析汇编, 在语义特征位置处插入代码以获取和生成函数特征. 
+  * 同时记录运行时的信息, 比如函数参数, 调用函数地址, 返回值等
+* 模拟执行: 相似的函数在相同输入的情况下行为也应当是一致的.
+  * 函数参数分配: 克隆函数具有相同的参数数量. 因此在执行时确定函数数量, 数量一致再根据调用约定填入参数
+  * 全局变量读取: 不仅要迁移到相同的全局变量, 还要保证全局变量的使用顺序一致. 如果没有足够的全局变量值进行分配, 使用预定义的0xdeadbeef
+  * 间接调用/跳转: 通过确认模拟执行期间的调用目标来判断是否是克隆函数. 跳转表保存在.rodata里
+  * 标准库函数调用: 记录库函数调用的返回值, 模拟时直接返回就不去执行了. 
+  * 使用LCS(最长公共子序列)算法进行相似性测量, 而相似度分数则使用Jaccard Index来衡量.
+* 实现: 使用IDA来获取基本块信息, 使用Valgrind进行插装, 基于angr进行模拟执行. 因为签名的内存占用很高, 所以使用Hirschberg算法进行实现LCS, 该算法有着可观的内存占用复杂度. 
 
 </details>
 
