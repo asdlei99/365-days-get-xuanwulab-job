@@ -1740,6 +1740,18 @@
 
 </details> 
 
+<details> <summary>Day35: 阅读相似性检测论文 统计性方法</summary> 
+
+> 传送门: [Statistical similarity of binaries](https://dl.acm.org/doi/10.1145/2980983.2908126)
+
+* 论文受图的局部相似性匹配启发, 用统计的方法通过函数切片的局部匹配得分来计算全局的匹配得分. 
+  * Decomposing the procedure into strands: 将函数分解成多个切片
+  * Comparing strands: 使用program verifier通过假设输入等价并检查中间值和输出值, 以此来检查两条链在语义上是否等价
+  * Statistical reasoning over strands: 用切片之间的局部证据得分(LES)的总和来计算函数之间的全局相似性得分. 同时放大了高LES表示的特有链的相似性得分, 减少了常见链的得分, 做了这样的差异化. 
+* 使用工具将汇编转换成了中间验证语言(IVL). 对于需要比较的一对切片, 则会给定输入和输出的断言, 然后通过verifier来检查这些断言是否生效, 然后统计有多少变量是等价的. 
+
+</details>
+
 ## 相关资源
 
 * [CTF Wiki](https://ctf-wiki.github.io/ctf-wiki/): 起初是X-Man夏令营的几位学员, 由[iromise](https://github.com/iromise)和[40huo](https://github.com/40huo)带头编写的CTF知识维基站点. 我早先学习参与CTF竞赛的时候, CTF一直没有一个系统全面的知识索引. [CTF Wiki](https://ctf-wiki.github.io/ctf-wiki/)的出现能很好地帮助初学者们渡过入门的那道坎. 我也有幸主要编写了Wiki的Reverse篇. 
