@@ -1750,6 +1750,10 @@
   * Statistical reasoning over strands: 用切片之间的局部证据得分(LES)的总和来计算函数之间的全局相似性得分. 同时放大了高LES表示的特有链的相似性得分, 减少了常见链的得分, 做了这样的差异化. 
 * 使用工具将汇编转换成了中间验证语言(IVL). 对于需要比较的一对切片, 则会给定输入和输出的断言, 然后通过verifier来检查这些断言是否生效, 然后统计有多少变量是等价的. 
 
+> 传送门: [BinMatch: A Semantics-based Hybrid Approach on Binary Code Clone Analysis](https://loccs.sjtu.edu.cn/~romangol/publications/icsme18.pdf)
+
+* 使用测试用例执行模板函数并记录运行时的信息(比如函数参数), 然后将信息迁移到每个候选目标函数并模拟执行, 在执行过程中, 记录模板和目标函数的语义签名. 根据比较模板函数和每个目标函数的签名来计算相似度.
+
 </details>
 
 ## 相关资源
