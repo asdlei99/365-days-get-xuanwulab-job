@@ -1682,7 +1682,7 @@
 
 </details> 
 
-<details> <summary>Day33-35: 阅读代码相似性检测论文</summary>
+<details> <summary>Day33-36: 阅读代码相似性检测论文</summary>
 
 > 传送门: [LibDX: A Cross-Platform and Accurate System to Detect Third-Party Libraries in Binary Code](https://ieeexplore.ieee.org/document/9054845)
 
@@ -1755,6 +1755,13 @@
   * 标准库函数调用: 记录库函数调用的返回值, 模拟时直接返回就不去执行了. 
   * 使用LCS(最长公共子序列)算法进行相似性测量, 而相似度分数则使用Jaccard Index来衡量.
 * 实现: 使用IDA来获取基本块信息, 使用Valgrind进行插装, 基于angr进行模拟执行. 因为签名的内存占用很高, 所以使用Hirschberg算法进行实现LCS, 该算法有着可观的内存占用复杂度. 
+
+> 传送门: [αDiff: Cross-Version Binary Code Similarity Detection with DNN](https://dl.acm.org/doi/pdf/10.1145/3238147.3238199?download=true)
+
+* 提取了3个语义特征: 函数代码特征(函数内), 函数调用特征(函数间)和模块交互特征(模块间). 输入函数的原始字节值给CNN进行训练将其转换成一个embedding(也就是向量), 然后加入到暹罗网络中去. 其次, 在提取函数间特征的时候, 出于性能考虑, 仅提取了调用图中函数节点的入度和出度作为函数特征. 第三, 分析每个函数的导入函数(imports)并将其用作模块间特征, 并设计算法将其嵌入为一个向量来计算距离. 
+
+> 传送门: [Binary Similarity Detection Using Machine Learning](https://dl.acm.org/doi/10.1145/3264820.3264821)
+
 
 </details>
 
