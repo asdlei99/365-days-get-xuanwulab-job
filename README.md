@@ -1682,7 +1682,7 @@
 
 </details> 
 
-<details> <summary>Day33-36: 阅读代码相似性检测论文</summary>
+<details> <summary>Day33-37: 阅读代码相似性检测论文</summary>
 
 > 传送门: [LibDX: A Cross-Platform and Accurate System to Detect Third-Party Libraries in Binary Code](https://ieeexplore.ieee.org/document/9054845)
 
@@ -1770,6 +1770,18 @@
   3. 语义相同但语法不同的strand则会转换成相同的文本表示
   4. 使用b-bit MD5哈希算法将文本表示进行处理. ? 迷惑行为, 哈希之后还算什么语义?
   5. 使用哈希值组成向量输入给神经网络.
+
+> 传送门: [VulSeeker: A Semantic Learning Based Vulnerability Seeker for Cross-platform Binary](https://dl.acm.org/doi/10.1145/3238147.3240480)
+
+* VulSeeker, 基于语义学习的跨平台二进制漏洞查找程序. 给定目标函数和易受攻击的函数, VulSeeker首先构造`标记语义流图(LSFG)`(labeled semantic flow graph)并提取基本块特征作为这两个函数的数值向量, 然后将数值变量输入给定制的DNN模型, 生成嵌入向量. 然后基于余弦距离计算两个二进制函数的相似性. 
+* LSFG就是结合了CFG和DFG的简化图. 另外提取了8种特征并将其编码组成向量: 栈操作指令数量, 算术指令数量, 逻辑指令数量, 比较指令数量, 库函数调用指令数量, 无条件跳转指令数量, 有条件跳转指令数量, 通用指令数量. 
+
+> 传送门: [FirmUp: Precise Static Detection of Common Vulnerabilities in Firmware](https://dl.acm.org/doi/10.1145/3296957.3177157)
+
+* 现代二进制程序会需要适应不同的环境和需求进行构建, 从而导致功能上的巨大差异, 比如wget可以在支持/不支持SSL的情况下分别编译, 而cURL也可以在不支持cookie的情况下编译. 这会导致结构上的巨大差异, 并阻碍了达到完全同构的可能. 
+1. 在统计篇的基础上, 进一步改进了strand. 
+2. 将过程相似性扩展到过程外去观察相邻的过程. 这是实践观察的经验, 观察到过程始终在程序内部进行操作, 因此几乎总是会和相邻的某些过程一起出现. 使用相邻过程的信息可以提高准确性
+3. 优化了匹配过程. 受往复博弈(back-and-forth games)的启发, 但匹配的集合非常大(但不是无限)时, 该博弈能更有效低替代全匹配算法. 
 
 </details>
 
