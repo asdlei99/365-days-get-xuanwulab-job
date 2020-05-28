@@ -1682,7 +1682,7 @@
 
 </details> 
 
-<details> <summary>Day33-37: 阅读代码相似性检测论文</summary>
+<details> <summary>Day33-38: 阅读代码相似性检测论文</summary>
 
 > 传送门: [LibDX: A Cross-Platform and Accurate System to Detect Third-Party Libraries in Binary Code](https://ieeexplore.ieee.org/document/9054845)
 
@@ -1782,6 +1782,19 @@
 1. 在统计篇的基础上, 进一步改进了strand. 
 2. 将过程相似性扩展到过程外去观察相邻的过程. 这是实践观察的经验, 观察到过程始终在程序内部进行操作, 因此几乎总是会和相邻的某些过程一起出现. 使用相邻过程的信息可以提高准确性
 3. 优化了匹配过程. 受往复博弈(back-and-forth games)的启发, 但匹配的集合非常大(但不是无限)时, 该博弈能更有效低替代全匹配算法. 
+
+> 传送门: [FOSSIL: A Resilient and Efficient System for Identifying FOSS Functions in Malware Binaries](https://dl.acm.org/doi/10.1145/3175492)
+
+* FOSSIL: 包含三部分, 1. 使用隐式马尔科夫链模型统计操作码频率以此来作为函数的句法特征. 2. 应用领域哈希图在CFG上进行随机游走, 以提取函数的语义特征. 3. 使用`z-score`对指令进行规范化, 以提取指令的行为. 然后将这三部分组件使用贝叶斯网络模型整合在一起, 对结果进行综合评估来检测开源软件函数. 
+* 汇编指令的规范化: 将常量值和内存应用规范化为V和M来表示. 而寄存器的规范化可以分级别, 比如将所有寄存器都用REG表示, 或者只区分通用寄存器/段寄存器/索引/指针寄存器等, 或者用寄存器的大小分为3类: 32/16/8位寄存器.
+* 在CFG上进行随机游走以获得路径序列, 找到两个基本块节点之间的最短路径. 
+
+> 传送门: [Beyond Precision and Recall: Understanding Uses (and Misuses) of Similarity Hashes in Binary Analysis](https://dl.acm.org/doi/10.1145/3176258.3176306)
+
+* Context-Triggered Piecewise Hashing: CTPH通过局部的相似来推测文件的相似, LBFS通过计算n字节上下文的滑窗进行哈希, 确保插入或删除短字符串仅会更改哈希的几个文件块而其余保持不变. 
+* Statistically Improbable Features: sdhash能够寻找统计上的特异字节序列(特征), 比如较长但不寻常的某一共同字符串.
+* N-grams: 相似的文件具有相似的n-gram频率分布.  
+* 实验表明tlsh和sdhash始终优于ssdeep.
 
 </details>
 
