@@ -1682,7 +1682,7 @@
 
 </details> 
 
-<details> <summary>Day33-38: 阅读代码相似性检测论文</summary>
+<details> <summary>Day33-39: 阅读代码相似性检测论文</summary>
 
 > 传送门: [LibDX: A Cross-Platform and Accurate System to Detect Third-Party Libraries in Binary Code](https://ieeexplore.ieee.org/document/9054845)
 
@@ -1795,6 +1795,22 @@
 * Statistically Improbable Features: sdhash能够寻找统计上的特异字节序列(特征), 比如较长但不寻常的某一共同字符串.
 * N-grams: 相似的文件具有相似的n-gram频率分布.  
 * 实验表明tlsh和sdhash始终优于ssdeep.
+
+> 传送门: [BCD: Decomposing Binary Code Into Components Using Graph-Based Clustering](https://dl.acm.org/doi/10.1145/3196494.3196504)
+
+* 将binary分解为组件图, 节点为函数, 边表征三种关系: 代码局部性, 数据引用, 函数调用. 然后实验图论方法将函数划分为不相关的组件. 
+* Code locality to sequence graph (SG): 程序员开发时会将结构相关的函数放在源代码彼此相近的位置. 
+* Data references to data-reference graph (DRG): 处理相同数据的函数更有可能是结构相关的, 因为它们都有相同的数据语义. BCD通过访问相同变量的函数之间添加边来构造数据引用图. 只关注静态数据, 全局变量和字符串. 
+* Function calls to call graph (CG): 两个函数之间的调用次数越多, 它们的结构关系越强, 也就增加相应的边的权重
+
+> 传送门: [Binary code clone detection across architectures and compiling configurations](https://dl.acm.org/doi/10.1109/ICPC.2017.22)
+
+* 将目标与每个模板函数进行比较, 找到最相似的函数. 
+* 首先识别函数传递的参数以及switch语句的可能跳转目标. 然后通过IR将不同架构的bianry统一表示起来, 并模拟这些二进制的执行以提取语义签名. 最后, 计算每个模板函数与每个目标函数的相似性分数, 返回分数排序的匹配函数列表. 
+* 处理流程: 反汇编二进制代码, 生成CFG, 收集CFG里基本块和边的信息. 然后遍历CFG以识别执行函数所需的参数, 收集所有可能的间接跳转地址(switch语句). 将二进制转换成IR, 接下来, 使用参数和switch的信息, 将IR形式的函数模拟执行起来, 用于生成语义签名.  最后将每个目标函数的签名与模板函数进行比较, 得到相似函数列表. 
+  
+> 传送门: [Benchmarks for software clone detection: A ten-year retrospective](https://ieeexplore.ieee.org/document/8330194)
+
 
 </details>
 
