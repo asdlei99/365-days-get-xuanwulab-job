@@ -1682,7 +1682,7 @@
 
 </details> 
 
-<details> <summary>Day33-39: 阅读代码相似性检测论文</summary>
+<details> <summary>Day33-40: 阅读代码相似性检测论文</summary>
 
 > 传送门: [LibDX: A Cross-Platform and Accurate System to Detect Third-Party Libraries in Binary Code](https://ieeexplore.ieee.org/document/9054845)
 
@@ -1811,6 +1811,15 @@
   
 > 传送门: [Benchmarks for software clone detection: A ten-year retrospective](https://ieeexplore.ieee.org/document/8330194)
 
+> 传送门: [The adverse effects of code duplication in machine learning models of code](https://dl.acm.org/doi/pdf/10.1145/3359591.3359735)
+
+* 论文主要在测量代码重复在机器学习模型中造成的副作用. 代码重复是指大量的几乎没有差别的重复代码片段. 
+* 代码重复的问题在于实践中, 研究人员很少通过直接观察其训练模型的结果造成的, 相反常见的作法是将数据集分为两部分, 一部分用作训练一部分用来做测试. 但由于重复数据集的分布方式和非重复数据集的分布方式不同, 因此机器学习模型将学习不同的概率分布进行建模. 而机器学习里的一个重要的假设就是, 每个数据点都必须独立且在使用的数据集上具有等同的分布. 因此在许多机器学习代码检测代码相似的模型里都严重违反了该原则. 
+* 三种类型的代码重复: 
+  * in-train duplicates: 在训练集里的重复文件
+  * in-test duplicates: 在测试集里的重复文件
+  * cross-set duplicate: 训练集和测试集均出现的重复文件
+* 论文通过修改SourcererCC代码, 对文件进行精确匹配. 而对于那些只有微量改动的重复文件, 则通过构建指纹(标识符和文字), 计算jaccard距离超过阈值(0.7和0.8), 来检测这种重复文件(此外指纹数量少的文件也会直接忽略掉). 
 
 </details>
 
