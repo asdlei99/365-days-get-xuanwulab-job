@@ -1823,6 +1823,25 @@
 
 </details>
 
+<details> <summary>Day41: 安装和了解Unicorn框架和示例代码</summary>
+
+* 安装: `UNICORN_ARCHS="arm aarch64 x86" ./make.sh ; sudo ./make.sh install`. 安装Python binding: `pip install unicorn`
+* CPU模拟执行的原理:
+  * 给定二进制文件, 将二进制解码成单独的指令
+  * 对每一条指令进行模拟, 需要解决ISA引用和内存访问&I/O请求
+  * 执行指令更新CPU的上下文(寄存器/内存/等等)
+* showcase里的代码释义:
+  * `mu = Uc(UC_ARCH_X86, UC_MODE_32)`: 初始化模拟器为x86_32模式
+  * `mu.mem_map(ADDRESS, 2 * 1024 * 1024)`: 映射2MB内存用于模拟, Address是模拟的起始内存地址
+  * `mu.mem_write(ADDRESS, X86_CODE32)`: 将机器码写入到起始地址内存中
+  * `mu.reg_write(UC_X86_REG_ECX, 0x1234)`: 设置寄存器的初始值, 这里是ECX寄存器
+  * `mu.emu_start(ADDRESS, ADDRESS + len(X86_CODE32))`: 开始模拟, 参数为内存起始和结束地址
+  * `mu.reg_read(UC_X86_REG_ECX)`: 读取寄存器的值
+* 阅读仓库内的Python示例代码: [传送门](https://github.com/unicorn-engine/unicorn/blob/master/bindings/python/README.TXT)
+  * `mu.hook_add(UC_HOOK_BLOCK, hook_block)`: 添加一个hook, 第一个参数是hook类型, 第二个参数是hook后的回调函数.
+  * 
+</details>
+
 ## 相关资源
 
 * [CTF Wiki](https://ctf-wiki.github.io/ctf-wiki/): 起初是X-Man夏令营的几位学员, 由[iromise](https://github.com/iromise)和[40huo](https://github.com/40huo)带头编写的CTF知识维基站点. 我早先学习参与CTF竞赛的时候, CTF一直没有一个系统全面的知识索引. [CTF Wiki](https://ctf-wiki.github.io/ctf-wiki/)的出现能很好地帮助初学者们渡过入门的那道坎. 我也有幸主要编写了Wiki的Reverse篇. 
