@@ -1839,7 +1839,11 @@
   * `mu.reg_read(UC_X86_REG_ECX)`: 读取寄存器的值
 * 阅读仓库内的Python示例代码: [传送门](https://github.com/unicorn-engine/unicorn/blob/master/bindings/python/README.TXT)
   * `mu.hook_add(UC_HOOK_BLOCK, hook_block)`: 添加一个hook, 第一个参数是hook类型, 第二个参数是hook后的回调函数.
-  * 
+
+</details>
+
+<details> <summary>Day42-43: 安装配置Archlinux+i3wm桌面环境</summary>
+
 </details>
 
 ## 相关资源
