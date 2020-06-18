@@ -2154,7 +2154,15 @@ export QT_IM_MODULE="fcitx"
 
 </details>
 
-<details> <summary>Day45: 参考Go by Example阅读一些示例代码</summary>
+<details> <summary>Day45-49: 参考Go by Example阅读一些示例代码</summary>
+
+工作中常写的是Python来跑任务, 但是近来越发觉得Python的性能不足, 因此考虑学习Go语言, 能很好地兼顾性能和开发效率, 并且谷歌的Syzkaller以及一众项目(包括未来的一些打算会需要性能和并发)都是使用Go语言编写, 因此有必要去掌握这门语言. 
+
+学习过程中练习编写的代码: [Vancir/go-by-example](https://github.com/Vancir/go-by-example)
+
+</details>
+
+<details> <summary>Day50: 阅读Syzkaller的源代码</summary>
 
 </details>
 
