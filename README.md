@@ -2162,7 +2162,12 @@ export QT_IM_MODULE="fcitx"
 
 </details>
 
-<details> <summary>Day50: 阅读Syzkaller的源代码</summary>
+<details> <summary>Day50: 了解syzkaller并学习learn-go-with-tests</summary>
+
+- [x] syzkaller的工作原理
+  * `syz-manager`进程负责启动, 监控和重启管理的VM实例, 并在VM里启动一个`syz-fuzzer`进程. `syz-manager`负责corpus持久化和crash存储. 运行在具有稳定内核物理机层面
+  * `syz-fuzzer`在不稳定的VM内部运行, 用于指导模糊测试进程(输入生产, 编译, 最小化等), 并通过RPC将触发新覆盖的输入发送回`syz-manager`. 它也会启动短暂的`syz-executor`进程
+  * 每个`syz-executor`进程执行单个输入样例(syscalls序列), 它从`syz-fuzzer`处获取一个程序进行执行并返回执行结构. 它被设计得极尽简单(以避免干扰fuzz), 使用c++编写并编译成静态二进制文件, 使用共享内存进行通信.
 
 </details>
 
