@@ -2187,6 +2187,21 @@ export QT_IM_MODULE="fcitx"
 
 </details>
 
+<details> <summary>Day51: 学习learn-go-with-tests</summary>
+
+- [x] learn go with tests:
+  * nil 是其他编程语言的 null。
+  * 错误可以是 nil，因为返回类型是 error，这是一个接口。
+  * 如果你看到一个函数，它接受参数或返回值的类型是接口，它们就可以是 nil。
+  * 如果你尝试访问一个值为 nil 的值，它将会引发 运行时的 panic。这很糟糕！你应该确保你检查了 nil 的值。
+  * map是引用类型, 可以是nil值, 但是为了避免nil指针异常错误, 应当使用`map[string]string{}`或`make(map[string]string)`来创建一个空map
+  * 测试只测试**有效的行为**, 而不是所有的**实现细节**
+  * 让它运作，使它正确，使它快速: 「运作」是通过测试，「正确」是重构代码，而「快速」是优化代码以使其快速运行。
+* 阅读syzkaller源码: godep restore 将依赖包都安装好. 
+
+</details>
+
+
 ## 相关资源
 
 * [CTF Wiki](https://ctf-wiki.github.io/ctf-wiki/): 起初是X-Man夏令营的几位学员, 由[iromise](https://github.com/iromise)和[40huo](https://github.com/40huo)带头编写的CTF知识维基站点. 我早先学习参与CTF竞赛的时候, CTF一直没有一个系统全面的知识索引. [CTF Wiki](https://ctf-wiki.github.io/ctf-wiki/)的出现能很好地帮助初学者们渡过入门的那道坎. 我也有幸主要编写了Wiki的Reverse篇. 
