@@ -2201,6 +2201,25 @@ export QT_IM_MODULE="fcitx"
 
 </details>
 
+<details> <summary>Day52: 学习angr使用的IR-VEX</summary>
+
+* [pyvex](https://github.com/angr/pyvex): 介绍了pyvex的安装和基本的使用方法, 并且介绍了一些IR的知识. 不过不够详细, 只有简单的示例. 而且感觉VEX有点粗糙. 
+* [Binary Analysis with angr](https://archive.fosdem.org/2017/schedule/event/valgrind_angr/attachments/slides/1797/export/events/attachments/valgrind_angr/slides/1797/slides.pdf): 使用vex来分析binary的一份ppt. 
+* [https://github.com/angr/vex/blob/dev/pub/libvex_ir.h](https://github.com/angr/vex/blob/dev/pub/libvex_ir.h): 该代码内的注释详细得说明了vex.
+  * IRSB: IR Super Blocks, 每个IRSB包括以下三样东西:
+    1. a type environment, 指示IRSB中每个临时值的类型
+    2. a list of statements, 代表代码
+    3. a jump that exits from the end the IRSB. 基本块结尾的跳转
+  * IRStmt(Statements): 表示带有副作用的操作
+  * IRExpr(Expression): 表示无副作用的操作
+  * guest state: 一块内存区域, 看描述理解是一块被VEX库控制的内存区域.
+  * IRMark: 是个IR语句, 但不表示实际的代码, 它指示的是原始指令的地址和长度
+  * ppIRFoo: 输出IRFoo的函数
+  * eqIRFoo: IRFoos的结构对等谓词
+  * deepCopyIRFoo: IRFoo的深拷贝, 会拷贝整个对象树, 所有的类型都有一个深拷贝函数
+  * shallowCopyIRFoo, 浅拷贝, 只拷贝顶层对象
+
+</details>
 
 ## 相关资源
 
