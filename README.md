@@ -2221,7 +2221,7 @@ export QT_IM_MODULE="fcitx"
 
 </details>
 
-<details> <summary>Day53: 阅读syzkaller源码</summary>
+<details> <summary>Day53: 阅读《Go语言标准库》 </summary>
 
 </details>
 
