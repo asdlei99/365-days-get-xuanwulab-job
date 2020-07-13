@@ -2227,6 +2227,9 @@ export QT_IM_MODULE="fcitx"
 
 <details> <summary>Day54: 使用Go语言写一个HaboMalHunter</summary>
 
+- [x] 使用golang读取配置信息
+- [x] 使用golang执行外部命令
+
 </details>
 
 ## 相关资源
