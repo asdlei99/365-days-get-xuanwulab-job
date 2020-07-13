@@ -2230,7 +2230,8 @@ export QT_IM_MODULE="fcitx"
 - [x] 使用golang读取配置信息
 - [x] 使用golang执行外部命令
 - [x] 增加检查是否使用UPX加壳
-- [ ] 使用file命令获取文件信息
+- [x] 使用file命令获取文件信息
+- [ ] 计算文件的Md5/Sha128/Sha256/SSdeep 
 
 </details>
 
