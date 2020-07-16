@@ -2225,13 +2225,16 @@ export QT_IM_MODULE="fcitx"
 
 </details>
 
-<details> <summary>Day55: 使用Go语言写一个HaboMalHunter</summary>
+<details> <summary>Day54-57: 使用Go语言写一个HaboMalHunter</summary>
 
 - [x] 使用golang读取配置信息
 - [x] 使用golang执行外部命令
 - [x] 增加检查是否使用UPX加壳
 - [x] 使用file命令获取文件信息
-- [ ] 计算文件的Md5/Sha128/Sha256/SSdeep 
+- [x] 计算文件的Md5/Sha128/Sha256/SSdeep 
+- [x] 支持提取文件的exif信息
+- [x] 支持提取ELF文件的依赖库
+- [x] 支持提取ELF文件的文件头信息
 
 </details>
 
