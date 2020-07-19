@@ -2240,6 +2240,65 @@ export QT_IM_MODULE="fcitx"
 
 <details> <summary>Day58: 学习UW CSE501 静态分析课程 </summary>
 
+* 优化选项: 
+    * dead code elimination
+    * partial redundancy elimination
+    * function inlining
+    * strength reduction
+    * loop transformations
+    * constant propagation
+* special edge: 
+    * back edge: 指向一个之前遍历过的block
+    * critical edge: 既不是唯一离开source的边, 也不是唯一进入到target的边
+* dataflow framework:  <G, L, F, M>
+    * G = flow graph
+    * L = (semi-)lattice
+    * F/M = flow / transfer functions
+- [x] reaching definition:
+    * dataflow equations:
+        * IN[b]	=	OUT[b1]	U	...	U	OUT[bn]	
+        * OUT[b]	=	(IN[b]	-	KILL[b])	U	GEN[b]
+        * IN[entry]	=	0000000	
+    * solving equations:
+    ```
+    Input: flow graph (CFG)
+    // boundary condition
+    OUT[Entry] = 0...0
+    // initial conditions
+    for each basic block B other than entry
+     OUT[B] = 0...0
+    // iterate
+    while (any out[] changes value) {
+     for each basic block B other than entry {
+     IN[B] = U (OUT[p]), for all predecessor block p of B
+     OUT[B] = (IN[B] – KILL[B]) U GEN[B]
+     }
+    }
+    ``` 
+- [x] live variable
+    * transfer function for live variable:
+        * x = y + z
+        * generates new live variable: USE[s] = {y, z}
+        * kills previously live variable: DEF[s] = x
+        * variables that were not killed are propagated: OUT[s] - DEF[s]
+        * so: IN[s] = USE[s] | (OUT[s] - DEF[s])
+    * setup
+        * boundary condition: IN[exit] = None
+        * initial conditions: IN[B] = None
+        * meet operation: OUT[B] = | IN[Successors]
+- [x] Must Reach: a definition D must reach a program point P if
+    * D appears at least once along all paths that leads to P
+    * D is not redefined along any path after the last appearance of D and before P
+* constant propagation: lattice
+    * undefined: variable has not been initialized
+    * NAC: variable definitely has a value( we just don't known what )
+    * meet rules:
+        * constant & constant = constant (if equal)
+        * constant & constant = NAC (if not equal)
+        * constant & undefined = constant
+        * constant & NAC = NAC
+* maximal fixed point
+* meet over paths: 可能是无穷个
 </details>
 
 
