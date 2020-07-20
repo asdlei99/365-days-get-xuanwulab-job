@@ -2302,6 +2302,48 @@ export QT_IM_MODULE="fcitx"
 </details>
 
 
+<details> <summary>Day59: 学习UW CSE501 指针分析 </summary>
+
+* 应用: 
+    * 别名分析: 确定两个指针是否都指向相同的内存区域
+    * 编译优化
+    * 并行: 将串行代码转换成并行代码
+    * shape analysis: 找到堆上数据结构的属性
+    * 检测内存问题: 泄漏, 空指针引用等安全问题
+* Point Language:
+    * assume x and y are pointers
+    * y = &x  -> means y points to x
+    * y = x   -> means if x points to z then y points to z
+    * *y = x  -> means if y points to z and z is a pointer, and if x points to w then z now points to w
+    * y = *x  -> means if x points to z and z is a pointer, and if z points to w then y **not** points to w
+    * points-to(x): set of variables that pointer variable x may point to 
+* Andersen as graph closure
+    * one node for each memory location
+    * each node contains a points-to set
+    * solve equations by computing transitive closure of graph, and add edges according to constraints
+* worklist algorithm
+
+    ```
+W = { nodes with non-empty points-to sets }
+while W is not empty {
+    v = choose from W
+    for each constraint v in x
+        add edge x -> v, and add x to W if edge is new
+    for each a in points-to(v) do {
+        for each constraint p in *v
+            add edge a -> p, and add a to W if edge is new
+        for each constraint *v in q
+            add edge q -> a, and add q to W if edge is new
+    }
+    for each edge v -> q do {
+        points-to(q) = points-to(q) | points-to(v), and add q to W if points-to(q) changed
+    }
+}
+    ```
+
+</details>
+
+
 
 ## 相关资源
 
