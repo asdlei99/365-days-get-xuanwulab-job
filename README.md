@@ -2344,16 +2344,20 @@ while W is not empty {
 </details>
 
 
-<details> <summary>Day60: 二进制相似度聚类Golang实现 </summary>
+<details> <summary>Day60-61: 二进制相似度聚类Golang实现 </summary>
 
 - [x] 使用binding连接radare2
 - [x] 获取程序的字符串信息
 - [x] 对字符串进行Base64编码后计算SHA256
-- [ ] 通过radare2获取二进制的基本块数据
-- [ ] 使用capstone将二进制数据转换成汇编代码
-- [ ] 拿到汇编代码后, 生成基本块
+- [x] 通过radare2获取二进制的基本块数据
+- [x] 使用capstone将二进制数据转换成汇编代码
+- [x] 拿到汇编代码后, 生成基本块
 - [ ] 拿到基本块后, 生成基本的控制流
-- [ ] 对基本块进行简单的符号化(去除偏移和立即数等)
+- [x] 对基本块进行简单的符号化(去除偏移和立即数等)
+
+</details>
+
+<details> <summary>Day62: 学习MOBISEC安全课程</summary>
 
 </details>
 
