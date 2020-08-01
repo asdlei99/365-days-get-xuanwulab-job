@@ -2357,8 +2357,39 @@ while W is not empty {
 
 </details>
 
-<details> <summary>Day62: 学习MOBISEC安全课程</summary>
+<details> <summary>Day62-63: 学习MOBISEC安全课程</summary>
 
+- [x] 04 - Intro to Android Architecture and Security
+
+Binder是Android用于RPC和进程间通信的机制, Android利用Binder来将普通进程内调用的API转换到特权进程/服务实现的特权API. 
+
+Android系统启动完毕后会广播一个带 ACTION_BOOT_COMPLETED action的 Intent, 因此app可以通过接收改该 Intent 来做开机启动, 也就可以用于持久化
+
+SYSTEM_ALERT_WINDOW: 可以在其他APP上显示一个窗口, 这会导致许多UI界面的攻击, 比如UI混淆, 点击劫持, 钓鱼等. 
+
+- [x] 05 - Real-World Android Apps
+
+sharedUserId安全问题: 相同证书的APP可以申请使用相同的Linux User ID, 而具有相同的Linux User Id可以共享该ID的所有内容, 也可以访问彼此的内部隐私存储和其他组件等. 
+
+- [x] 08 - Reverse Engineering
+
+Android逆向方法流:
+
+1. 大概了解app的功能: 模拟器里启动app, 观察初始的UI
+2. 找到app的攻击面: 
+    - 从入口点开始入手做攻击面分析
+    - 检查app的各项组件(activities, broadcast, intent, receiver), 这些组件是否暴露给外部的app使用
+    - 检查app如何与外部进行交互, 比如文件系统, 网络, 组件间通信等.
+3. app如何跟网络端点交互
+    - 寻找网络端点的IP, URL等. 虽然有可能经过混淆
+    - 寻找网络相关API的调用代码
+    - 在模拟器里运行并监视其网络活动.
+4. app是如何存储隐私信息
+    - 隐私信息包括有, 用户帐号证书, 用户隐私数据, 需要安全权限才能访问的数据等.
+5. 检查某个函数是否存在滥用
+    - app是怎么使用函数X的
+    - app是否有安全地使用该函数
+    - 攻击者该如何到达该函数?
 </details>
 
 ## 相关资源
