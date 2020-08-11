@@ -4,7 +4,11 @@
 
 这是一份我给自己365天内获取腾讯玄武实验室工作定下的学习进度清单, 用于记录我在这一年时间里每天的学习收获. 
 
-因为知识积累的差异, 该清单并不适用于纯粹的新手, 但我常认为自己是一个愚笨的人, 所以即便是刚入行的小白, 在补足了一定的基础知识后, 该清单依然具有一定的参考价值. 
+由于已经工作并非学生了, 我将白天的工作定义为自身能力的实践锻炼, 而晚上也就是本清单则注重于知识和理论的学习.
+
+因为知识积累的差异, 该清单并不适用于纯粹的初接触安全者, 但我常认为自己是一个愚笨的人, 所以即便是刚入行的小白, 在补足了一定的基础知识后, 该清单依然具有一定的参考价值. 
+
+> 因为时常有新的点去关注, 所以很多时候学习的内容并不连贯甚至于碎片化, 这也是无可避免的, 有待我填完坑后重新整一份新的清单, 更贴合正常学习的顺序.
 
 ## 学习进度
 
@@ -2398,6 +2402,28 @@ Android逆向方法流:
 
 </details>
 
+<details> <summary>Day65: 编写脚本自动同步GoSSIP的微信推送归档到Github仓库</summary>
+
+> 传送门: [LLVM Tutorial](https://llvm.org/docs/tutorial/)
+
+</details>
+
+<details> <summary>Day66：阅读论文 FuzzGen: Automatic Fuzzer Generation</summary>
+
+> 论文地址：[link](https://www.usenix.org/conference/usenixsecurity20/presentation/ispoglou)
+> 项目地址：[link](https://github.com/HexHive/FuzzGen)
+
+</details>
+
+<details> <summary>Day67: 编写脚本检测PyPi包名抢注情况</summary>
+
+> 项目地址：[link](https://github.com/Vancir/PyPi-Typosquatting-Graph)
+
+![graph.png](https://raw.githubusercontent.com/Vancir/PyPi-Typosquatting-Graph/master/assets/graph.png)
+
+</details>
+
+
 ## 相关资源
 
 * [CTF Wiki](https://ctf-wiki.github.io/ctf-wiki/): 起初是X-Man夏令营的几位学员, 由[iromise](https://github.com/iromise)和[40huo](https://github.com/40huo)带头编写的CTF知识维基站点. 我早先学习参与CTF竞赛的时候, CTF一直没有一个系统全面的知识索引. [CTF Wiki](https://ctf-wiki.github.io/ctf-wiki/)的出现能很好地帮助初学者们渡过入门的那道坎. 我也有幸主要编写了Wiki的Reverse篇. 
@@ -2427,6 +2453,14 @@ Android逆向方法流:
 1. 我有足量时间的`Android/Linux/Win`的逆向调试经验, 对于`Linux/Win`的安全机制和底层架构有一定了解, 不了解`Android`的安全机制和底层架构.
 2. 编译型语言(`C/C++`)我的掌握程度一般, 脚本语言(`Python`)掌握良好. 
 3. 漏洞研究分析经验是工作的必要内容, IDA插件开发部分, 我曾学习过[IDAPython](https://github.com/Vancir/IDAPython-Scripts)的内容, 对于7.0以上版本还需要了解. `Fuzzer`开发部分是我欠缺的, 我仅详细阅读过`FuzzIL`和`AFL`的源码实现, 并未有实际的开发经验. 有着一定的代码脱壳加密经验, 不过仍需多加练习. 网络协议分析我不擅长也不喜欢, 可以忽略.
+
+</details>
+
+<details>
+<summary>2020/8/11 CTF选手说：在玄武实验室工作始终怎样的体验</summary>
+
+> 来自玄武实验室微信公众号当日推送: [link](https://mp.weixin.qq.com/s/EoLuRrJVmlQRYhpm6cib3w)
+
 </details>
 
 ## 关于X-Man夏令营
