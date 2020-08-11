@@ -2404,13 +2404,16 @@ Android逆向方法流:
 
 <details> <summary>Day65: 编写脚本自动同步GoSSIP的微信推送归档到Github仓库</summary>
 
-> 传送门: [LLVM Tutorial](https://llvm.org/docs/tutorial/)
+> 传送门: [GoSSIP-NewsBot](https://github.com/Vancir/GoSSIP-NewsBot)
+
+理论上可以将任何微信公众号的推送定时更新到Github仓库里
 
 </details>
 
 <details> <summary>Day66：阅读论文 FuzzGen: Automatic Fuzzer Generation</summary>
 
 > 论文地址：[link](https://www.usenix.org/conference/usenixsecurity20/presentation/ispoglou)
+
 > 项目地址：[link](https://github.com/HexHive/FuzzGen)
 
 </details>
@@ -2420,6 +2423,10 @@ Android逆向方法流:
 > 项目地址：[link](https://github.com/Vancir/PyPi-Typosquatting-Graph)
 
 ![graph.png](https://raw.githubusercontent.com/Vancir/PyPi-Typosquatting-Graph/master/assets/graph.png)
+
+红色点表示PyPi.org的Top4000的Python包, 且红色点越大表示其下载量越高, 绿色点则表示可疑的抢注包. 
+
+图形主要分为三个层次, 最外层的Python包相对安全, 次外层的Python包有中等风险, 最内层的Python包有高的抢注风险
 
 </details>
 
