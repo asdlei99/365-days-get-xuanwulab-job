@@ -2410,7 +2410,7 @@ Android逆向方法流:
 
 </details>
 
-<details> <summary>Day66：阅读论文 FuzzGen: Automatic Fuzzer Generation</summary>
+<details> <summary>Day66: 阅读论文 FuzzGen: Automatic Fuzzer Generation</summary>
 
 > 论文地址：[link](https://www.usenix.org/conference/usenixsecurity20/presentation/ispoglou)
 
@@ -2427,6 +2427,30 @@ Android逆向方法流:
 红色点表示PyPi.org的Top4000的Python包, 且红色点越大表示其下载量越高, 绿色点则表示可疑的抢注包. 
 
 图形主要分为三个层次, 最外层的Python包相对安全, 次外层的Python包有中等风险, 最内层的Python包有高的抢注风险
+
+</details>
+
+<details> <summary>Day68: 了解遗传算法并使用geatpy进行参数调优</summary>
+
+> 源于朋友的一个问题, 朋友有一个疾病传染模型, 需要使用遗传算法进行参数调优
+
+geatpy是一个国人维护的遗传算法工具箱, 具体的内容参考官方仓库里的 [demo](https://github.com/geatpy-dev/geatpy/tree/master/geatpy/demo)即可. 
+
+1. 主要是确定自己的优化目标, 是进行多目标优化还是单目标优化, 来选择相应的算法模板. 
+2. 然后确定自己的参数上下界, 参数之间的约束条件, 优化方向, 填入算法模板就可以了. 
+3. 了解了下遗传算法的内容, 顺便也学习/重构了朋友的疾病传染模型.
+
+</details>
+
+<details> <summary>Day69: 编写macOS的内核扩展</summary>
+
+> 仅列举编写时参考的资料
+
+1. [Apple's Technical Note TN2127](https://developer.apple.com/library/archive/technotes/tn2127/_index.html)
+2. [Learn How to Build Your Own Utility to Monitor Malicious Behaviors of Malware on macOS](https://www.blackhat.com/us-18/arsenal.html#learn-how-to-build-your-own-utility-to-monitor-malicious-behaviors-of-malware-on-macos)
+3. [Kemon: An Open-Source Pre and Post Callback-Based Framework for macOS Kernel Monitoring](https://www.blackhat.com/us-18/arsenal/schedule/#kemon-an-open-source-pre-and-post-callback-based-framework-for-macos-kernel-monitoring-12085)
+4. [FireEye: Introducing Monitor.app for macOS](https://www.fireeye.com/blog/threat-research/2017/03/introducing_monitor.html)
+5. [Objective-See](https://objective-see.com/blog.html)
 
 </details>
 
