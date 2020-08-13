@@ -2442,7 +2442,7 @@ geatpy是一个国人维护的遗传算法工具箱, 具体的内容参考官方
 
 </details>
 
-<details> <summary>Day69: 编写macOS的内核扩展</summary>
+<details> <summary>Day69-70: 编写macOS的内核扩展</summary>
 
 > 仅列举编写时参考的资料
 
