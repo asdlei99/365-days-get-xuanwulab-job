@@ -266,7 +266,7 @@
         * 分支条件在标志寄存器中会相应地置位, 这点跟x86一致, 区别主要在标志寄存器各个位的含义略有不同. ARM的分支通过在指令后加相应的条件码来实现.
             | Condition Code | Meaning (for cmp or subs) | Status of Flags  |
             | ---- | -- | -- |
-            | CS or HS | Unsigned Higher or Same (or Carry Set) | C==1 | 
+            | CS or HS | Unsigned Higher or Same (or Carry Set) | C==1 |
             | CC or LO | Unsigned Lower (or Carry Clear) | C==0 |
             | MI | Negative (or Minus) | N==1 |
             | PL | Positive (or Plus) | N==0 |
@@ -1071,6 +1071,7 @@
 
     * ![e9patch-tactics.png](assets/e9patch-tactics.png)
     * T1(Padded Jumps): 使用冗余的指令前缀来填充跳转指令. 如图所示, T1(a)的冗余前缀是`48`, T2(a)的冗余前缀是`48 26`. 使用冗余前缀的缺点就是会限制可操控的范围, 比如B2的范围是`0x8348xxxx`, 但T1(a)的范围只有`0xc08348xx`, T1(b)则是一个具体的值了. 
+      
       * T1的适用性取决于补丁指令的长度, 长度越大, 能右移尝试的次数也就越多. 同时也意味着T1不适用于`单字节指令`. 同时右移会受到越多的范围约束. 
     * T2(Successor Eviction): 使用后一个指令(ins2)的pacth冗余来填充跳转指令(ins1). 比如利用T1策略将`ins2`填充为`e9 YY YY YY`, 那么可以再次应用T1策略让`ins1`利用`ins2`的冗余`e9 YY`, 那么可以控制的范围就成了`0xYYe9XXXX`. 而这个策略不仅能提高覆盖的范围, 也能适用于单字节指令(直接覆盖为e9)
     * T3(Neighbour Eviction): 通过短跳转(-128~127)来跳转到附近的可用指令, 到达后结合T1和T2使用得到更大的覆盖范围. 
@@ -1544,6 +1545,7 @@
 > 传送门: [Deobfuscating Android Applications through Deep Learning](https://pdfs.semanticscholar.org/8587/79f77d4934ddab0552fc6817f85d2bc32926.pdf)
 
 - [x] 介绍:
+  
   * 论文应用了递归神经网络和深度学习. Macneto通过`topic modeling`学习代码的深层语义来进行解混淆. `topic model`是程序行为的表征, 不受代码布局,CFG结构,元数据等的影响.
 - [x] 背景知识:
   * Lexical transformations: 进行标识符(方法/类/变量名)的替换.
@@ -2108,7 +2110,7 @@ export QT_IM_MODULE="fcitx"
         Female = 1
         Male = 2
     )
-    ```  
+    ```
   * 常量可以用`len(), cap(), unsafe.Sizeof()`函数计算表达式的值。常量表达式中，`函数必须是内置函数`，否则编译不过. 
 * switch语句从上到下逐一测试, 直到匹配为止. 匹配项后面也不需要再加break. 如果我们需要执行后面的case, 可以使用`fallthrough`. `fallthrough`会强制执行下一条case语句.
 * switch语句还可以用于`type-switch`来判断某个interface变量中实际存储的变量类型
@@ -2129,7 +2131,7 @@ export QT_IM_MODULE="fcitx"
     default:
        fmt.Printf("未知型")    
   }  
-  ``` 
+  ```
 * select 是 Go 中的一个控制结构, 类似于用于通信的 switch 语句. `每个case必须是一个通信操作, 要么是发送要么是接受`
   ``` go
   select {
@@ -2226,7 +2228,6 @@ export QT_IM_MODULE="fcitx"
 </details>
 
 <details> <summary>Day53: 阅读《Go语言标准库》 </summary>
-
 </details>
 
 <details> <summary>Day54-57: 使用Go语言写一个HaboMalHunter</summary>
@@ -2278,7 +2279,7 @@ export QT_IM_MODULE="fcitx"
      OUT[B] = (IN[B] – KILL[B]) U GEN[B]
      }
     }
-    ``` 
+    ```
 - [x] live variable
     * transfer function for live variable:
         * x = y + z
@@ -2462,7 +2463,145 @@ geatpy是一个国人维护的遗传算法工具箱, 具体的内容参考官方
 
 这次想来看这个项目是如何进行iOS的模拟的. 
 
+* 准备材料: a **kernel image**, a **device tree**, a static **trust cache**, and **ramdisk** images
+* 首先下载苹果官方给出的更新文件: [iOS 12.1 update file](http://updates-http.cdn-apple.com/2018FallFCS/fullrestores/091-91479/964118EC-D4BE-11E8-BC75-A45C715A3354/iPhone_5.5_12.1_16B92_Restore.ipsw) 它是一个zip文件可以直接解压
+
+``` shell
+$ unzip iPhone_5.5_12.1_16B92_Restore.ipsw
+# 下载解压用的工具
+$ git clone git@github.com:alephsecurity/xnu-qemu-arm64-tools.git
+# 解码ASN1编码的内核映像
+$ pip install pyasn1 # 脚本依赖pyasn1这个包
+$ python xnu-qemu-arm64-tools/bootstrap_scripts/asn1kerneldecode.py kernelcache.release.n66 kernelcache.release.n66.asn1decoded
+# 解码后还有一层lzss压缩, 继续解压
+$ python xnu-qemu-arm64-tools/bootstrap_scripts/decompress_lzss.py kernelcache.release.n66.asn1decoded kernelcache.release.n66.out
+# 获取device tree, 同样是ASN1编码, 用之前的工具解码即可.
+$ python xnu-qemu-arm64-tools/bootstrap_scripts/asn1dtredecode.py Firmware/all_flash/DeviceTree.n66ap.im4p Firmware/all_flash/DeviceTree.n66ap.im4p.out
+# 对于ramdisk同样进行ASN1解码
+$ python3 xnu-qemu-arm64-tools/bootstrap_scripts/asn1rdskdecode.py ./048-32651-104.dmg ./048-32651-104.dmg.out
+# 对ramdisk进行大小调整, 挂载和赋权
+$ hdiutil resize -size 1.5G -imagekey diskimage-class=CRawDiskImage 048-32651-104.dmg.out
+$ hdiutil attach -imagekey diskimage-class=CRawDiskImage 048-32651-104.dmg.out
+$ sudo diskutil enableownership /Volumes/PeaceB16B92.arm64UpdateRamDisk/
+# 挂载原来的映像
+$ hdiutil attach ./048-31952-103.dmg 
+# 为ramdisk内的dynamic loader cache创建空间并拷贝进去
+$ sudo mkdir -p /Volumes/PeaceB16B92.arm64UpdateRamDisk/System/Library/Caches/com.apple.dyld/
+$ sudo cp /Volumes/PeaceB16B92.N56N66OS/System/Library/Caches/com.apple.dyld/dyld_shared_cache_arm64 /Volumes/PeaceB16B92.arm64UpdateRamDisk/System/Library/Caches/com.apple.dyld/
+$ sudo chown root /Volumes/PeaceB16B92.arm64UpdateRamDisk/System/Library/Caches/com.apple.dyld/dyld_shared_cache_arm64
+# 获取一些编译好的iOS工具, 包括bash
+$ git clone https://github.com/jakeajames/rootlessJB
+$ cd rootlessJB/rootlessJB/bootstrap/tars/
+$ tar xvf iosbinpack.tar
+$ sudo cp -R iosbinpack64 /Volumes/PeaceB16B92.arm64UpdateRamDisk/
+$ cd -
+# 配置launchd不要运行任何服务
+$ sudo rm /Volumes/PeaceB16B92.arm64UpdateRamDisk/System/Library/LaunchDaemons/*
+```
+
+* 配置launchd运行bash: 创建 `/Volumes/PeaceB16B92.arm64UpdateRamDisk/System/Library/LaunchDaemons/bash.plist` 并写入以下内容
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+        <key>EnablePressuredExit</key>
+        <false/>
+        <key>Label</key>
+        <string>com.apple.bash</string>
+        <key>POSIXSpawnType</key>
+        <string>Interactive</string>
+        <key>ProgramArguments</key>
+        <array>
+                <string>/iosbinpack64/bin/bash</string>
+        </array>
+        <key>RunAtLoad</key>
+        <true/>
+        <key>StandardErrorPath</key>
+        <string>/dev/console</string>
+        <key>StandardInPath</key>
+        <string>/dev/console</string>
+        <key>StandardOutPath</key>
+        <string>/dev/console</string>
+        <key>Umask</key>
+        <integer>0</integer>
+        <key>UserName</key>
+        <string>root</string>
+</dict>
+</plist>
+```
+
+* 安装 **jtool** 然后将之前拷贝进去的预编译二进制进行信任.  
+
+  ``` shell
+  $ jtool --sig --ent /Volumes/PeaceB16B92.arm64UpdateRamDisk/iosbinpack64/bin/bash
+  Blob at offset: 1308032 (10912 bytes) is an embedded signature
+  Code Directory (10566 bytes)
+                  Version:     20001
+                  Flags:       none
+                  CodeLimit:   0x13f580
+                  Identifier:  /Users/jakejames/Desktop/jelbreks/multi_path/multi_path/iosbinpack64/bin/bash (0x58)
+                  CDHash:      7ad4d4c517938b6fdc0f5241cd300d17fbb52418b1a188e357148f8369bacad1 (computed)
+                  # of Hashes: 320 code + 5 special
+                  Hashes @326 size: 32 Type: SHA-256
+   Empty requirement set (12 bytes)
+  Entitlements (279 bytes) :
+  --
+  <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+  <plist version="1.0">
+  <dict>
+      <key>platform-application</key>
+      <true/>
+      <key>com.apple.private.security.container-required</key>
+      <false/>
+  </dict>
+  </plist>
+  ```
+
+* 将`CDHash`写入到`tchashes`内:
+
+  ``` bash
+  $ touch ./tchashes
+  $ for filename in $(find /Volumes/PeaceB16B92.arm64UpdateRamDisk/iosbinpack64 -type f); do jtool --sig --ent $filename 2>/dev/null; done | grep CDHash | cut -d' ' -f6 | cut -c 1-40 >> ./tchashes
+  ```
+
+* 创建static trust cache blob
+
+  ``` bash
+  $ python3 xnu-qemu-arm64-tools/bootstrap_scripts/create_trustcache.py tchashes static_tc
+  ```
+
+* 将各个卷宗卸载掉
+
+  ``` bash
+  $ hdiutil detach /Volumes/PeaceB16B92.arm64UpdateRamDisk
+  $ hdiutil detach /Volumes/PeaceB16B92.N56N66OS   
+  ```
+
+* 编译iOS定制过的QEMU
+
+  ``` bash
+  $ git clone git@github.com:alephsecurity/xnu-qemu-arm64.git
+  $ cd xnu-qemu-arm64
+  $ ./configure --target-list=aarch64-softmmu --disable-capstone --disable-pie --disable-slirp
+  ```
+
+* 使用QEMU将iOS虚拟机启动起来
+
+  ``` bash
+  $ ./xnu-qemu-arm64/aarch64-softmmu/qemu-system-aarch64 -M iPhone6splus-n66-s8000,kernel-filename=kernelcache.release.n66.out,dtb-filename=Firmware/all_flash/DeviceTree.n66ap.im4p.out,ramdisk-filename=048-32651-104.dmg.out,tc-filename=static_tc,kern-cmd-args="debug=0x8 kextlog=0xfff cpus=1 rd=md0 serial=2",xnu-ramfb=off -cpu max -m 6G -serial mon:stdio
+  # 进入bash后, 修改PATH指向拷贝有预编译二进制的目录
+  bash-4.4# export PATH=$PATH:/iosbinpack64/usr/bin:/iosbinpack64/bin:/iosbinpack64/usr/sbin:/iosbinpack64/sbin
+  ```
+
+  
+
 </details>
+
+
+
+
 
 ## 相关资源
 
