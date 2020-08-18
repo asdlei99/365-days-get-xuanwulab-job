@@ -2442,9 +2442,9 @@ geatpy是一个国人维护的遗传算法工具箱, 具体的内容参考官方
 
 </details>
 
-<details> <summary>Day69-70: 编写macOS的内核扩展</summary>
+<details> <summary>Day69-70: 编写macOS的内核扩展监控进程行为</summary>
 
-> 仅列举编写时参考的资料
+> 仅列举编写时参考的资料, 目前可参考的公开资料很少, 除开参考以下内容外, 还需要更多的参考macOS SDK和开源的xnu的源码
 
 1. [Apple's Technical Note TN2127](https://developer.apple.com/library/archive/technotes/tn2127/_index.html)
 2. [Learn How to Build Your Own Utility to Monitor Malicious Behaviors of Malware on macOS](https://www.blackhat.com/us-18/arsenal.html#learn-how-to-build-your-own-utility-to-monitor-malicious-behaviors-of-malware-on-macos)
@@ -2454,6 +2454,15 @@ geatpy是一个国人维护的遗传算法工具箱, 具体的内容参考官方
 
 </details>
 
+<details> <summary>Day71: 参考xnu-qemu-arm64项目使用QEMU模拟iOS</summary>
+
+> 传送门: [xnu-qemu-arm64](https://github.com/alephsecurity/xnu-qemu-arm64)
+
+使用qemu+kvm模拟macOS目前算是资料较多的一方面了, 可以参考[Docker-OSX](https://github.com/sickcodes/Docker-OSX). 因为是写的dockerfile, 所以相当完善地记录了构建的整个过程, 熟悉qemu和黑苹果安装的话会很好理解. 
+
+这次想来看这个项目是如何进行iOS的模拟的. 
+
+</details>
 
 ## 相关资源
 
