@@ -2602,6 +2602,17 @@ $ sudo rm /Volumes/PeaceB16B92.arm64UpdateRamDisk/System/Library/LaunchDaemons/*
 
 </details>
 
+<details> <summary>Day73: 学习LLVM Pass的编写</summary>
+
+参考资料: 
+1. [LLVM官方资料: Writing an LLVM Pass](https://llvm.org/docs/WritingAnLLVMPass.html) 
+2. [CS6120 Project3: Write an LLVM Pass](https://www.cs.cornell.edu/courses/cs6120/2019fa/project/3/): 同时也是一项公开的编译器课程
+3. [Writng an LLVM Pass: 101 LLVM 2019 tutorial](https://llvm.org/devmtg/2019-10/slides/Warzynski-WritingAnLLVMPass.pdf)
+4. [UG3 COMPILING TECHNIQUES 2019/2020](https://www.inf.ed.ac.uk/teaching/courses/ct/19-20/): 国外课程
+5. [Github: abenkhadra/llvm-pass-tutorial](https://github.com/abenkhadra/llvm-pass-tutorial): 简单的demo, 最下有给出其他的参考资料
+
+</details>
+
 
 ## 相关资源
 
