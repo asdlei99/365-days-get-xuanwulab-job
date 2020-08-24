@@ -2611,6 +2611,59 @@ $ sudo rm /Volumes/PeaceB16B92.arm64UpdateRamDisk/System/Library/LaunchDaemons/*
 4. [UG3 COMPILING TECHNIQUES 2019/2020](https://www.inf.ed.ac.uk/teaching/courses/ct/19-20/): 国外课程
 5. [Github: abenkhadra/llvm-pass-tutorial](https://github.com/abenkhadra/llvm-pass-tutorial): 简单的demo, 最下有给出其他的参考资料
 
+- [x] 什么是LLVM Pass?
+    * LLVM Pass意即LLVM的转换(transformations)和优化(optimizations)工作
+    * 所有的LLVM Pass都继承于Pass类, 根据用途的不同, 可以继承的类有 ModulePass, CallGraphSCCPass, FunctionPass, or LoopPass, or RegionPass classes
+- [x] LLVM PASS HelloWorld Demo
+    * 首先下载LLVM的源代码, 我们的HelloWorld就在其源码的lib/Transforms/Hello下. 我当前的版本是10.0.1
+    * 编辑lib/Transforms/Hello/CMakeLists.txt写入以下内容: 
+      ``` cmake
+        add_llvm_library(
+          LLVMHello
+          MODULE
+          Hello.cpp
+          PLUGIN_TOOL
+          opt
+          )
+      ```
+    * 编辑lib/Transforms/CMakeLists.txt加入`add_subdirectory(Hello)`
+    * 以上是在配置CMake的编译环境, 接下来可以开始编写LLVM Pass.
+    * 首先是引入头文件
+      ``` c++
+      #include "llvm/Pass.h"        // 编写PASS的头文件
+      #include "llvm/IR/Function.h" // 操作函数用
+      #include "llvm/Support/raw_ostream.h" // 输出信息用
+      ```
+    * 指定`using namespace llvm;` 因为引入的头文件里的函数存在于llvm命名空间里
+    * `namespace {`指定匿名命名空间, 作用跟c的static类似, 能使得匿名空间内声明的代码仅在当前文件内可见
+    * 在命名空间里声明我们的pass本身, 声明继承于FunctionPass, 以及重载FunctionPass的函数runOnFunction
+      ``` c++
+  namespace {
+    // Hello - The first implementation, without getAnalysisUsage.
+    struct Hello : public FunctionPass {
+      static char ID; // Pass identification, replacement for typeid
+      Hello() : FunctionPass(ID) {}
+
+      bool runOnFunction(Function &F) override {
+        ++HelloCounter;
+        errs() << "Hello: ";
+        errs().write_escaped(F.getName()) << '\n';
+        return false;
+      }
+    };
+  }
+      ```
+    * 初始化LLVM的Pass ID. LLVM使用ID的地址来标识一个pass, ID的值并不重要 `char Hello::ID = 0;`
+    * 注册我们的Hello类: 第一个是命令行参数, 第二个是其参数释义
+    ``` c++
+    static RegisterPass<Hello> X("hello", "Hello World Pass",
+                             false /* Only looks at CFG */,
+                             false /* Analysis Pass */);
+    ```
+    * 注册pass到现有的分析流水线: 
+      * PassManagerBuilder::EP_EarlyAsPossible 可以使得pass优先于所有优化pass前执行
+      * PassManagerBuilder::EP_FullLinkTimeOptimizationLast 可以使得pass优先于所有链接时优化Pass前执行. 
+    * 使用opt运行pass: `opt -load lib/LLVMHello.so -hello < hello.bc > /dev/null`
 </details>
 
 
