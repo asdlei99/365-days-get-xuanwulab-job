@@ -2667,6 +2667,11 @@ $ sudo rm /Volumes/PeaceB16B92.arm64UpdateRamDisk/System/Library/LaunchDaemons/*
     * 使用opt运行pass: `opt -load lib/LLVMHello.so -hello < hello.bc > /dev/null`
 </details>
 
+<details> <summary>Day74: 学习使用Ghidra进行逆向</summary>
+
+> 参考资料: [hackaday-u](https://github.com/wrongbaud/hackaday-u)
+
+</details>
 
 ## 相关资源
 
