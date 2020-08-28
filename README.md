@@ -2671,6 +2671,28 @@ $ sudo rm /Volumes/PeaceB16B92.arm64UpdateRamDisk/System/Library/LaunchDaemons/*
 
 > 参考资料: [hackaday-u](https://github.com/wrongbaud/hackaday-u)
 
+参考资料是一个使用Ghidra进行逆向的教程, 但是里面有很多是讲逆向基础的, 所以就此略过, 仅关注其中跟Ghidra相关的部分. 
+
+Ghidra只需要安装有JDK11后运行ghidraRun即可. 界面过于简陋了而且使用有点不方便, 工作需要创建一个工程, 然后点击CodeBrowser按纽(龙的标志)打开窗口, 然后再在窗口里点击上方菜单栏`File->Import File`将待分析的文件导入到工程里.  
+打开后Ghidra进行分析, 然后左下角的`Symbol Tree`窗口里是的`Functions`就是各个函数了, 点击其中的函数, 就是相应的汇编代码及反编译的伪代码.
+
+反编译的代码只能算能看了, 但还是有很大空间. 不过鼠标右键有切片的功能, 这就是Ghidra的优势之一了. 
+
+* G: 跳转到地址/标签/表达式
+* L: 重命名变量
+* T: 定义数据类型
+* B: 在整型之间快速转换 byte, word, dword, qword
+* ': 在字符类型之间转换 char, string, unicode
+* [: 创建数组
+* P: 创建指针
+* Shift+[: 创建结构体
+* 导入C的头文件: File -> Parse C Source
+* 交叉引用: References -> Show References to context
+* S: 内存搜索值
+* Ctrl+Shift+E: 搜索字符串
+
+无头模式: 参考 [analyzeHeadlessREADME](https://ghidra.re/ghidra_docs/analyzeHeadlessREADME.html)
+
 </details>
 
 ## 相关资源
