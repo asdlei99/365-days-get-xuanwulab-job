@@ -2787,6 +2787,13 @@ Ghidra只需要安装有JDK11后运行ghidraRun即可. 界面过于简陋了而�
 
 </details>
 
+<details> <summary>Day77: 阅读FANS和Sys论文</summary>
+
+* [Sys: a Static/Symbolic Tool for Finding Good Bugs in Good (Browser) Code](https://cseweb.ucsd.edu/~dstefan/pubs/brown:2020:sys.pdf)
+* [FANS: Fuzzing Android Native System Services via Automated Interface Analysis](https://www.usenix.org/system/files/sec20fall_liu_prepub.pdf)
+
+</details>
+
 
 ## 相关资源
 
