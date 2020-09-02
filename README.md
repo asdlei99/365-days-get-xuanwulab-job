@@ -2794,6 +2794,13 @@ Ghidra只需要安装有JDK11后运行ghidraRun即可. 界面过于简陋了而�
 
 </details>
 
+<details> <summary>Day78: 阅读两篇fuzzing论文</summary>
+
+* [Detecting Critical Bugs in SMT Solvers Using Blackbox Mutational Fuzzing](https://numairmansur.github.io/STORM.pdf)
+* [Fuzzing: Challenges and Reflections](https://www.computer.org/csdl/magazine/so/5555/01/09166552/1mgaKsMFDYA)
+
+</details>
+
 
 ## 相关资源
 
