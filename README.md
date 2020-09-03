@@ -2802,6 +2802,14 @@ Ghidra只需要安装有JDK11后运行ghidraRun即可. 界面过于简陋了而�
 </details>
 
 
+<details> <summary>Day79: 阅读fuzz深层状态空间探索的论文以及一些收藏文章</summary>
+
+* [IJON: Exploring Deep State Spaces via Fuzzing](https://www.syssec.ruhr-uni-bochum.de/media/emma/veroeffentlichungen/2020/02/27/IJON-Oakland20.pdf)
+* [Fuzzing Linux GUI/GTK Programs With American Fuzzy Lop (AFL) For Fun And Pr... You Get the Idea. Part One.](https://blog.hyperiongray.com/fuzzing-gtk-programs-with-american-fuzzy-lop-afl/)
+  * AFL无法应对那些主程序逻辑就在一个while循环里的程序, 因为它无法区分
+
+</details>
+
 ## 相关资源
 
 * [CTF Wiki](https://ctf-wiki.github.io/ctf-wiki/): 起初是X-Man夏令营的几位学员, 由[iromise](https://github.com/iromise)和[40huo](https://github.com/40huo)带头编写的CTF知识维基站点. 我早先学习参与CTF竞赛的时候, CTF一直没有一个系统全面的知识索引. [CTF Wiki](https://ctf-wiki.github.io/ctf-wiki/)的出现能很好地帮助初学者们渡过入门的那道坎. 我也有幸主要编写了Wiki的Reverse篇. 
