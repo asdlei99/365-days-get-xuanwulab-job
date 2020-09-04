@@ -2806,7 +2806,7 @@ Ghidra只需要安装有JDK11后运行ghidraRun即可. 界面过于简陋了而�
 
 * [IJON: Exploring Deep State Spaces via Fuzzing](https://www.syssec.ruhr-uni-bochum.de/media/emma/veroeffentlichungen/2020/02/27/IJON-Oakland20.pdf)
 * [Fuzzing Linux GUI/GTK Programs With American Fuzzy Lop (AFL) For Fun And Pr... You Get the Idea. Part One.](https://blog.hyperiongray.com/fuzzing-gtk-programs-with-american-fuzzy-lop-afl/)
-  * AFL无法应对那些主程序逻辑就在一个while循环里的程序, 因为它无法区分
+* [Pigaios: A Tool for Diffing Source Codes against Binaries](https://docs.google.com/presentation/d/1ifvugStGL7Qc8xSFeYXp2MGQ6jQGOOMSolBrJy8kCMY/edit#slide=id.g4453e8add5_0_85)
 
 </details>
 
