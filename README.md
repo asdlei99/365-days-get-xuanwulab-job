@@ -2810,6 +2810,10 @@ Ghidra只需要安装有JDK11后运行ghidraRun即可. 界面过于简陋了而�
 
 </details>
 
+<details> <summary>Day80: 阅读LLVM Cookbook</summary>
+
+</details>
+
 ## 相关资源
 
 * [CTF Wiki](https://ctf-wiki.github.io/ctf-wiki/): 起初是X-Man夏令营的几位学员, 由[iromise](https://github.com/iromise)和[40huo](https://github.com/40huo)带头编写的CTF知识维基站点. 我早先学习参与CTF竞赛的时候, CTF一直没有一个系统全面的知识索引. [CTF Wiki](https://ctf-wiki.github.io/ctf-wiki/)的出现能很好地帮助初学者们渡过入门的那道坎. 我也有幸主要编写了Wiki的Reverse篇. 
