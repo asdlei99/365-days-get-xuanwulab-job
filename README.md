@@ -2810,7 +2810,7 @@ Ghidra只需要安装有JDK11后运行ghidraRun即可. 界面过于简陋了而�
 
 </details>
 
-<details> <summary>Day80: 阅读LLVM Cookbook</summary>
+<details> <summary>Day80-81: 阅读LLVM Cookbook</summary>
 
 </details>
 
