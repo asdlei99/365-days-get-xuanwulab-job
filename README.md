@@ -2812,6 +2812,98 @@ Ghidra只需要安装有JDK11后运行ghidraRun即可. 界面过于简陋了而�
 
 <details> <summary>Day80-81: 阅读LLVM Cookbook</summary>
 
+## 一些命令行
+
+* opt指定单独的pass进行优化:
+  * opt –passname -S demo.ll –o output.ll
+  * pass的源码路径在llvm/test/Transforms下, 重要的转换pass:
+    * instcombine 合并冗余指令
+    * deadargelim 无用参数消除
+    * mem2reg 优化内存访问(将局部变量从内存提升到寄存器)
+    * adce 入侵式无用代码消除
+    * bb-vectorize  基本块向量化
+    * constprop 简单常量传播
+    * dec: 无用代码消除
+    * globaldce: 无用全局变量消除
+    * globalopt: 全局变量优化
+    * gvn: 全局变量编号
+    * inline: 函数内联
+    * licm: 循环常量代码外提
+    * loop-unswitch 循环外提
+    * lowerinvoke: invode指令lowering, 以支持不稳定的代码生成器
+    * lowerswitch: switch指令lowering
+    * memcpyopt: memcpy优化
+    * simplicycfg: 简化CFG
+    * sink: 代码提升
+    * tailcallelim: 尾部函数调用消除
+* 将C代码转换成LLVM IR:
+  * clang -emit-llvm -S demo.c -o demo.ll
+* 将LLVM IR转换成bitcode
+  * llvm-as demo.ll -o demo.bc
+* 将bitcode转换为目标平台汇编码
+  * llc demo.bc -o demo.s
+  * clang -S demo.bc -o demo.s -fomit-frame-pointer (clang默认不消除frame pointer, llc默认消除)
+  * 加入-march=architecture参数能指定生成的目标架构
+  * 加入-mcpu=cpu能指定目标CPU
+  * 加入-regalloc=allocator能制定寄存器分配类型
+* 将bitcode转回LLVM IR
+  * llvm-dis demo.bc -o demo.ll
+* 链接LLVM bitcode
+  * llvm-link demo.bc demo2.bc -o output.bc
+* lli执行bitcode, 当前架构存在JIT的话会用JIT执行否则用解释器. 
+* 使用-cc1选项能指定clang只使用cc1编译器前端
+* 输出AST: clang -cc1 demo.c -ast-dump
+* 使用llgo来获取go语言转换的LLVM IR
+  * llgo -dump demo.go
+* DragonEgg是一个GCC插件, 能让GCC使用LLVM优化器和代码生成器
+  * gcc testprog.c -S -O1 -o - -fplugin=./dragonegg.so
+* opt可以指定-O设置优化级别, 使用--debug-pass=Structure可以查看在每个优化级别运行了哪些pass
+
+## 编写LLVM Pass
+
+### 0x01 编写makefile
+
+在llvm lib/Transform目录下编写makefile文件, 指定llvm目录路径, 库名字, 标识模块为可加载
+
+``` makefile
+LEVEL = ../../..
+LIBRARYNAME = FuncBlockCount
+LOADABLE_MODULE = 1
+include $(LEVEL)/Makefile.common
+```
+
+### 0x02 编写pass代码
+
+``` c++
+#include "llvm/Pass.h"
+#include "llvm/IR/Function.h"
+#include "llvm/Support/raw_ostream.h"
+
+// 引入llvm命名空间以使用其中的函数
+using namespace llvm;
+namespace {
+  // 声明Pass
+  struct FuncBlockCount : public FunctionPass {
+    static char ID; // 声明Pass标识符, 会被LLVM用作识别Pass
+    FuncBlockCount() : FunctionPass(ID) {}
+    // 实现run函数
+    bool runOnFunction(Function &F) override {
+      errs()<< "Function "<< F.getName()<< '\n';
+      return false;
+    }
+  };
+}
+// 初始化Pass ID
+char FuncBlockCount::ID = 0;
+// 注册Pass, 填写名称和命令行参数
+static RegisterPass<FuncBlockCount> X("funcblockcount", 
+                                  		"Function Block Count", false, false);
+```
+
+使用opt运行新的pass: 
+
+* opt -load (path_to_so_file)/demo.so -funcblockcount demo.ll
+
 </details>
 
 ## 相关资源
