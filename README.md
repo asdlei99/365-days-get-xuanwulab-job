@@ -2906,7 +2906,15 @@ static RegisterPass<FuncBlockCount> X("funcblockcount",
 
 </details>
 
-<details> <summary>Day82: 学习NLP里的命名实体识别模型(NER) </summary>
+<details> <summary>Day82-83: 学习NLP里的命名实体识别模型(NER) </summary>
+
+命名实体识别是NLP的一个基础任务, 简单说就是标定词性. 传统的实现方式都是用的LSTM+CRF, CRF是条件随机场的英文缩写. 当然也有用BiLSTM的, 因为是双向,所以能兼顾上下文的语义信息. 
+
+Google在19年发布的BERT模型也能运用在NER里, 能够帮助提升性能, 也是一个新的实现方案. 
+
+NLP有一个框架名为spaCy, 能运用在工业级场景里, 它的底层也大多用的CPython进行编写. 我主要参考它仓库里的example进行训练, 详情参考: [train_ner.py](https://github.com/explosion/spacy/blob/master/examples/training/train_ner.py)
+
+大致的使用方法就是使用内置的`ner`流水线, 然后训练的时候禁用掉其他内置的流水线, 通过多次的迭代训练. 当然除此外还有一些其他的代码, 比如分割训练集/测试集, 对模型进行性能评估之类的一些代码, 在官方的示例中没有体现, 需要自己去实现. 
 
 </details>
 
