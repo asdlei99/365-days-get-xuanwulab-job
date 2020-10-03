@@ -18,6 +18,7 @@
 > 传送门: [CTF Wiki: Linux Pwn](https://ctf-wiki.github.io/ctf-wiki/pwn/readme-zh/)
 
 - [x] [Stack Overflow Principle](https://ctf-wiki.github.io/ctf-wiki/pwn/linux/stackoverflow/stackoverflow-basic-zh/): 通过栈溢出覆盖掉函数栈帧的返回地址, 当函数返回时就会跳入攻击者覆写的地址继续执行代码. 
+  
     1. 确认溢出的长度可以到达栈帧返回地址
     2. 确认没有开启Stack Canary
     3. 确认覆写的地址所在的段具有执行权限
@@ -264,18 +265,18 @@
         * `POP`等价于`LDMIA sp! reglist`
     - [x] [Conditional Execution and Branching](https://azeria-labs.com/arm-conditional-execution-and-branching-part-6/)
         * 分支条件在标志寄存器中会相应地置位, 这点跟x86一致, 区别主要在标志寄存器各个位的含义略有不同. ARM的分支通过在指令后加相应的条件码来实现.
-            | Condition Code | Meaning (for cmp or subs) | Status of Flags  |
-            | ---- | -- | -- |
-            | CS or HS | Unsigned Higher or Same (or Carry Set) | C==1 |
-            | CC or LO | Unsigned Lower (or Carry Clear) | C==0 |
-            | MI | Negative (or Minus) | N==1 |
-            | PL | Positive (or Plus) | N==0 |
-            | AL | Always executed | - |
-            | NV | Never executed | - |
-            | VS | Signed Overflow | V==1 |
-            | VC | No signed Overflow | V==0 |
-            | HI | Unsigned Higher | (C==1) && (Z==0) |
-            | LS | Unsigned Lower or same | (C==0) || (Z==0) |
+            | Condition Code | Meaning (for cmp or subs)              | Status of Flags  |
+            | -------------- | -------------------------------------- | ---------------- |
+            | CS or HS       | Unsigned Higher or Same (or Carry Set) | C==1             |
+            | CC or LO       | Unsigned Lower (or Carry Clear)        | C==0             |
+            | MI             | Negative (or Minus)                    | N==1             |
+            | PL             | Positive (or Plus)                     | N==0             |
+            | AL             | Always executed                        | -                |
+            | NV             | Never executed                         | -                |
+            | VS             | Signed Overflow                        | V==1             |
+            | VC             | No signed Overflow                     | V==0             |
+            | HI             | Unsigned Higher                        | (C==1) && (Z==0) |
+            | LS             | Unsigned Lower or same                 | (C==0)           |  | (Z==0) |
         * `IT`是`IF-Then-(Else)`的缩写.
         * `IT`指令格式: `IT{x{y{z}}} cond`, 也就是最多可以有条件地执行`4`条指令
             * `cond`指定`IT`块中第`1`条指令的条件
@@ -2762,6 +2763,7 @@ Ghidra只需要安装有JDK11后运行ghidraRun即可. 界面过于简陋了而�
 * 检查是否同时设置了AFL_DUMB_FORKSRV and AFL_NO_FORKSRV环境变量(冲突)
 * 设置了AFL_PRELOAD情况下, 会设置相关的环境变量LD_PRELOAD, DYLD_INSERT_LIBRARIES并且不建议使用环境变量AFL_LD_PRELOAD
   
+
 </details>
 
 <details> <summary>Day76: 阅读一篇开源库名称抢注检测的论文</summary>
@@ -2918,6 +2920,29 @@ NLP有一个框架名为spaCy, 能运用在工业级场景里, 它的底层也�
 
 </details>
 
+<details> <summary>Day84: 学习字符串的几种相似度算法的代码</summary>
+
+> 参考项目地址: [python-string-similarity](https://github.com/luozhouyang/python-string-similarity)
+
+* Method of four russians 四个俄罗斯人算法
+* Levenshtein 编辑距离: 将一个字符串转化成另一个字符串所需要编辑(插入/删除/替换)的最少次数, 使用Wagner-Fischer算法实现, 空间复杂度为O(m), 时间复杂度为O(m*n)
+* Normalized Levenshtein: 在Levenshtein基础上除以最长的字符串长度, 以进行归一化. 
+* Weighted Levenshtein: 在Levenshtein基础上对不同字符的编辑设置了去不同的权重, 常用于OCR识别, 比如将P替换成R的成本比将P替换成M的成本要低, 因此P跟R是更为相似的. 也可以用于键盘输入的自动纠正, 比如键盘上相邻字符的替换成本更低. 
+* Damerau-Levenshtein: 在Levenshtein基础上增加了`交换`操作, 将相邻的两个字符交换位置.
+* Optimal String Alignment: 在Damerau–Levenshtein基础上增加了限制条件: no substring is edited more than once, 区别在于对交换操作增加了一个递归.  
+* Jaro-Winkler: 最早用于记录重复链接的检测, 适用于短小的字符串比如人名以及检测错别字. 是Damerau-Levenshtein的变种, 其认为相隔距离远的2个字符交换的重要性要比相邻字符的要大.
+* Longest Common Subsequence: 最长公共子序列问题在于找到2个或更多序列公共的最长序列. 与查找子字符串不同, 子序列不需要是连续的, 被用于git diff来记录变动. 字符串X(长度n)和Y(长度m)的LCS距离为`n+m-2|LCS(X, Y)|`, 其最小为0, 最大为n+m. 当编辑仅允许插入和删除, 或者替换的成本为插入删除成本的2倍时, LCS距离等同于编辑距离. 通常使用动态规划来实现, 时间复杂度和空间复杂度均为O(n\*m). 也有新的算法能实现O(log(m)\*log(n))的时间复杂度, 但是空间复杂度的要求是O(m\*n^2)
+* Metric Longest Common Subsequence: 计算公式 `1 - |LCS(s1, s2)| / max(|s1|, |s2|)`
+* N-Gram: 使用\n附加字符来增加首字符的权重. 
+* Shingle (n-gram) based algorithms: 将字符串分割成长度为n的序列然后进行处理, 除开直接计算字符串的距离外, 对于大数据机, 还可以对所有字符串进行预处理再计算距离.
+  * Q-Gram: 两个字符串的距离为其profile(每个n-gram出现的次数)差异的L1范数: `SUM( |V1_i - V2_i| )`. Q-gram距离是编辑距离的下界, 但可以在O(m+n)的时间复杂度内完成计算. 
+  * Cosine similarity: 两个字符串向量表示的夹角的余弦值: `V1 . V2 / (|V1| * |V2|)`, 距离则为`1-cosine`
+  * Jaccard index: 将每个字符串都视为n-gram的集合, `|V1 inter V2| / |V1 union V2|`, 距离则为`1-index`
+  * Sorensen-Dice coefficient: 类似于jaccard index, 计算公式为: `2 * |V1 inter V2| / (|V1| + |V2|)`, 距离为`1-similarity`
+  * Overlap coefficient: 类似jaccard和sorensen-dice: `|V1 inter V2| / Min(|V1|,|V2|)`, 倾向于产生更高的结果.
+* SIFT4: 受JaroWinkler和LCS启发的通用字符串距离算法, 希望尽可能地接近人类对弦距离的感知. 
+
+</details>
 
 
 ## 相关资源
