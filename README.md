@@ -2944,7 +2944,21 @@ NLP有一个框架名为spaCy, 能运用在工业级场景里, 它的底层也�
 
 </details>
 
-<details> <summary>Day85: 阅读Accelerated C++第5章</summary>
+<details> <summary>Day85: 阅读Accelerated C++第5,6章</summary>
+
+* 迭代vector:
+  ``` c++
+  for (vector<Student_info>::const_iterator iter = students.begin(); 
+    iter != students.end(); ++iter) { 
+      cout << iter->name << endl;
+      cout << (*iter).name << endl;
+  }
+  ```
+* `copy(bottom.begin(), bottom.end(), back_inserter(ret));`中copy(begin, end, out), 指定拷贝的起始, 终点以及输出的目标. 而back_inserter()在其参数作为目标的时候, 能将内容附加到其参数后, 也就是拷贝到ret的末尾. 切要注意, 不能使用`copy(bottom.begin(), bottom.end(), ret.end())`
+* `transform(begin, end, out, func)`前三个参数是迭代器, 第四个参数是函数, begin和end用来指定元素的范围, 而out指定转换后元素的目标存储, 而func则是对应的转换函数, 会用于begin和end指定范围内的各个元素. 
+* `accumulate(v.begin(), v.end(), 0.0)`以0为起点, 将v的值全部累加起来. 
+* `remove_copy(begin, end, out, value)`, 从容器内移除begin和end指定的内容, 并拷贝其中与value不相等的部分到out
+* `partition(begin, end, func)`会对begin, end指定范围进行排布, 满足func为True的排在前面, False的排在后面. 然后返回bounds, 也就是True和False的边界. 这个排布是不稳定的, 可能会打乱其内部的排列顺序, 因此也可以使用`stable_partition`
 
 </details>
 
