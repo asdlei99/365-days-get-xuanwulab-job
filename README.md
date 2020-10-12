@@ -3022,8 +3022,24 @@ NLP有一个框架名为spaCy, 能运用在工业级场景里, 它的底层也�
 
 </details>
 
+<details> <summary>Day88: 阅读LLVM Essentials第1章</summary>
 
-<details> <summary>Day88: 阅读LLVM Essentials第1,2章</summary>
+* 对于LLVM IR有以下解释: 
+  * ModuleID: 指定LLVM模块ID. 一个LLVM模块包含输入文件的完整内容, 由函数, 全局变量, 外部函数原型, 符号表等组成. 
+  * datalayout字符串可以指明字节序(e表示小端)以及文件类型(e表示elf, o表示mach-o)
+  * IR里所有的全局变量用@作为前缀, 局部变量用%作为前缀
+  * LLVM将全局变量视为指针, 因此对指针进行解引用需要使用load指令, 存储值需要使用store质量. 
+  * `%1 = value`是寄存器变量, `%2 = alloca i32`是分配在栈上的变量
+  * 函数名前的@表明其在全局是可见的.
+  * LLVM使用三地址码且是SSA格式
+  * ident指明模块和编译器版本. 
+* LLVM工具
+  * clang -emit-llvm -c add.c
+  * llvm-as add.ll –o add.bc
+  * llvm-dis add.bc –o add.ll
+  * llvm-link main.bc add.bc -o output.bc
+  * lli output.bc
+  * llc output.bc –o output.s
 
 </details>
 
