@@ -3045,6 +3045,42 @@ NLP有一个框架名为spaCy, 能运用在工业级场景里, 它的底层也�
 
 <details> <summary>Day89: 阅读LLVM Essentials第2章</summary>
 
+书里使用的应该是LLVM 3.8的版本, 目前LLVM已经更新到11, 且macos通过homebrew安装的10.0.1版本其`--system-libs`的xml2存在问题. 所以会有一些不适用的情况. 尽管代码发生了很大的变化, 但好在很多思路是大致一样的. 
+
+* LLVM提供了Module()来创建模块, 创建模块需要指定其name和context
+* 编译时需要引入LLVM的头文件, 使用`llvm-config --cxxflags --ldflags --system-libs --libs core`
+* IRBuilder类用于生成LLVM IR. 
+* llvm:Function用于生成函数, llvm::FunctionType()用于关联函数的返回值类型
+* 对于生成的Function可以使用verifyFunction()来检查是否正确
+* Module类的getOrInsertGlobal()函数可以用于创建全局变量
+* Linkage: 指定链接类型
+* phi指令用于分支条件情况, 对于不同分支的基本块使用phi指令来确定具体使用哪一个分支的结果(因为IR是SSA形式)
+
+简单的LLVM 10示例代码
+
+``` c++
+#include "llvm/Bitcode/BitcodeWriter.h"
+#include "llvm/IR/Module.h"
+#include "llvm/IR/Verifier.h"
+#include "llvm/Support/raw_ostream.h"
+#include <stdio.h>
+
+using namespace llvm;
+
+int main(int argc, char *argv[]) {
+  LLVMContext Context;
+  Module *Mod = new Module("MyModule", Context);
+  raw_fd_ostream r(fileno(stdout), false);
+  verifyModule(*Mod, &r);
+
+  FILE *my_mod = fopen("MyModule.bc", "w+");
+  raw_fd_ostream bitcodeWriter(fileno(my_mod), true);
+  WriteBitcodeToFile(*Mod, bitcodeWriter);
+  delete Mod;
+  return 0;
+}
+```
+
 </details>
 
 ## 相关资源
