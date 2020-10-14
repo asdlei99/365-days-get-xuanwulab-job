@@ -3083,7 +3083,49 @@ int main(int argc, char *argv[]) {
 
 </details>
 
-<details> <summary>Day90: 阅读LLVM Essentials第3章</summary>
+<details> <summary>Day90: 阅读LLVM Essentials第3,4章</summary>
+
+* getelementptr指令用于获取地址, 本身并不访问内存, 只是做地址的计算
+* load指令用于读取内存内容, store指令用于写入内容到内存
+* insertelement将标量插入到向量中去, 其接受三个参数, 依次是响亮类型, 插入的标量值, 插入索引位置
+* extractelement从向量里读出标量. 
+* doInitialization: 用于初始化. runOn{Passtype}一般是针对Passtype的处理函数. doFinalization则是最后的结尾清理环境用的
+* 编写LLVM Pass需要在`lib/Transforms`下创建目录, 并在其内创建Makefile大概如下:
+  ``` makefile
+  LEVEL = ../../.. 
+  LIBRARYNAME = FnNamePrint 
+  LOADABLE_MODULE = 1 
+  include $(LEVEL)/Makefile.common
+  ```
+* 一个打印函数名的pass如下:
+  ``` c++
+  #include "llvm/Pass.h" 
+  #include "llvm/IR/Function.h" 
+  #include "llvm/Support/raw_ostream.h"
+
+  using namespace llvm;
+
+  namespace {
+
+  struct FnNamePrint: public FunctionPass { 
+    static char ID; 
+    FnNamePrint () : FunctionPass(ID) {} 
+    bool runOnFunction(Function &F) override { 
+      errs() << "Function " << F.getName() << '\n'; 
+      return false; 
+      } 
+    };
+  }
+
+  char FnNamePrint::ID = 0;
+  static RegisterPass< FnNamePrint > X("funcnameprint","Function Name Print", false, false);
+  ```
+  最后两行是向pass manager注册当前pass
+* 给opt提供–debug-pass=Structure选项可以查看pass运行的情况
+* getAnalysisUsage可以指定pass之间的依赖关系
+  * AnalysisUsage::addRequired<>方法设定pass的依赖关系, 指定的pass会先于当前pass执行
+  * AnalysisUsage:addRequiredTransitive<>指定多个依赖组成分析链条
+  * AnalysisUsage::addPreserved<>指定暂时保存某个pass的结果以避免重复计算. 
 
 </details>
 
