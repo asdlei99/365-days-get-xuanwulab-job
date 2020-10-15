@@ -3129,6 +3129,15 @@ int main(int argc, char *argv[]) {
 
 </details>
 
+<details> <summary>Day91: 阅读LLVM Essentials第5,6章</summary>
+
+* dominator tree: 支配树, 当所有通向节点n的路径也一定都通过节点d时, 我们称节点d支配节点n, 表示为d->n, 对于所有基本块构成的也就是支配树. 
+* DAG: directed acyclic graph, 用于代码生成的一个有向无环图. 
+* 代码生成: 将IR转化成SelectionDAG然后进行多阶段优化: DAG组合, 合法化, 指令选择, 指令调度等, 最后分配寄存器生成机器码. 
+* SelectionDAGBuilder接口用于创建对应IR指令的DAG节点
+
+</details>
+
 
 ## 相关资源
 
