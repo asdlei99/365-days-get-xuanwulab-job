@@ -3138,9 +3138,7 @@ int main(int argc, char *argv[]) {
 
 </details>
 
-<details> <summary>Day92: 阅读USENIX 2021一篇检测相似性代码的论文</summary>
-
-> 论文地址: [Finding Bugs Using Your Own Code: Detecting Functionally-similar yet Inconsistent Code](https://www.longlu.org/publication/fics/)
+<details> <summary>Day92: 阅读LLVM官方文档</summary>
 
 </details>
 
