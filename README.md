@@ -3140,6 +3140,46 @@ int main(int argc, char *argv[]) {
 
 <details> <summary>Day92: 阅读LLVM官方文档</summary>
 
+这些是我在阅读官方文档时觉得比较重要的资料, 当然一些比如设置环境Get Started之类的文档略过
+
+* [Developing LLVM passes out of source](https://releases.llvm.org/11.0.0/docs/CMake.html#developing-llvm-passes-out-of-source)
+  * 示例的LLVM Pass的结构目录如下
+    ``` shell
+    <project dir>/
+        |
+        CMakeLists.txt
+        <pass name>/
+            |
+            CMakeLists.txt
+            Pass.cpp
+            ...
+    ```
+  * <project dir>/CMakeLists.txt 内容
+    ``` shell 
+    find_package(LLVM REQUIRED CONFIG)
+
+    add_definitions(${LLVM_DEFINITIONS})
+    include_directories(${LLVM_INCLUDE_DIRS})
+
+    add_subdirectory(<pass name>)
+    ```
+  * <project dir>/<pass name>/CMakeLists.txt: `add_library(LLVMPassname MODULE Pass.cpp)`
+  * 如果想更好地整合进LLVM源码里(通过add_llvm_library), 可以使用以下方式:
+  * 将以下内容添加到<project dir>/CMakeLists.txt文件里去(在find_package(LLVM ...)后)
+    ``` shell
+    list(APPEND CMAKE_MODULE_PATH "${LLVM_CMAKE_DIR}")
+    include(AddLLVM)
+    ```
+  * 修改<project dir>/<pass name>/CMakeLists.txt为以下:
+    ``` shell
+    add_llvm_library(LLVMPassname MODULE
+      Pass.cpp
+      )
+    ```
+  * 集合进LLVM源码:
+    1. 拷贝<pass name>文件夹到<LLVM root>/lib/Transform
+    2. 添加add_subdirectory(<pass name>)到<LLVM root>/lib/Transform/CMakeLists.txt
+
 </details>
 
 
