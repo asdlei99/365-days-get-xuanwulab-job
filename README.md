@@ -3138,7 +3138,7 @@ int main(int argc, char *argv[]) {
 
 </details>
 
-<details> <summary>Day92-93: 阅读LLVM官方文档</summary>
+<details> <summary>Day92-94: 阅读LLVM官方文档</summary>
 
 这些是我在阅读官方文档时觉得比较重要的资料, 当然一些比如设置环境Get Started之类的文档略过
 
@@ -3179,6 +3179,13 @@ int main(int argc, char *argv[]) {
   * 集合进LLVM源码:
     1. 拷贝<pass name>文件夹到<LLVM root>/lib/Transform
     2. 添加add_subdirectory(<pass name>)到<LLVM root>/lib/Transform/CMakeLists.txt
+
+
+* [LLVM’s Analysis and Transform Passes](https://releases.llvm.org/11.0.0/docs/Passes.html): 对各个pass的用途进行了介绍, 也有很多分析的实现, 可以作为样例去学习
+* [LLVM Programmer’s Manual](https://releases.llvm.org/11.0.0/docs/ProgrammersManual.html)
+  * formatv用于格式化字符串输出
+  * 使用assert进行断言: `assert(isPhysReg(R) && "All virt regs should have been allocated already.");`
+  * 使用llvm_unreachable函数指定控制流不会到达的分支
 
 </details>
 
