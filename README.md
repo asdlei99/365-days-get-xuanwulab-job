@@ -3189,6 +3189,9 @@ int main(int argc, char *argv[]) {
 
 </details>
 
+<details> <summary>Day95: 编写词法分析器</summary>
+
+</details>
 
 ## 相关资源
 
