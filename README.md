@@ -3367,7 +3367,17 @@ SymCC基于LLVM构建, 首先获取待测程序的LLVM bitcode, 然后将其编�
 
 </details>
 
-<details> <summary>Day102: 阅读论文libdft污点分析技术</summary>
+<details> <summary>Day102-103: 阅读论文libdft污点分析技术</summary>
+
+动态数据流跟踪(DFT)用于处理程序在运行期间传递的标记并跟踪感兴趣的数据, 我们以下图示例代码为例, 其主要分为以下三个方面: 
+
+![example.png](https://i.loli.net/2020/11/03/W7ogFcmwEhk8R1u.png)
+
+* Data Source: source是程序或者一个内存位置, 通常在执行函数或系统调用之后, 就会引入相关数据, 比如Figure 1中我们把文件定义为source, 那么read函数就会继而标记data和pass
+* Data Tracking: 程序运行期间会跟踪标记数据的复制情况和更改情况. 比如Figure 1中标记了data变量, 那么在接下来的while循环里, csum与data数据相关, 就会继而标记csum. 而(b)中, pass跟phash有数据相关, 而phash跟authorized存在控制相关, 这就是一种间接的控制流依赖. 
+* Data Sink: sink也是程序或内存位置, 通常可以在sink点处对标记数据进行检查, 比如不允许数据存在某些内存区域或者函数参数的检验. 比如在Figure 1中, 写入文件作为sink, write函数则对csum进行了相关操作. 
+
+DFT需要额外的空间保存数据标签, 另外, 程序本身也需要使用标签传播逻辑和数据标签进行扩展, 并且分别检查source和sink的逻辑, 为此使用插桩代码来实现. 代码插桩可以通过静态注入方式(在源代码开发/编译/加载过程)实现, 也可以使用虚拟化或动态二进制插桩(DBI)实现. 无论静态/动态方法实现插桩, 都需要将程序的数据和标签进行关联, 并注入逻辑以在source处声明标签, 然后根据程序语义定义的数据依赖性来传播它们, 最终检查sink是否存在标记数据. 
 
 </details>
 
