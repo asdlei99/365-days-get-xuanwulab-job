@@ -3385,6 +3385,26 @@ DFT需要额外的空间保存数据标签, 另外, 程序本身也需要使用�
 
 </details>
 
+<details> <summary>Day105: 学习MIT公开课Data Tracking</summary>
+
+> 视频地址: [21. Data Tracking](https://www.youtube.com/watch?v=WG5UbMrUiLU&ab_channel=MITOpenCourseWare)
+
+视频以Android的TaintDroid为例介绍污点分析.
+* sources: 敏感数据的来源, 比如传感器数据, 联系人信息, IMEI这些都是敏感数据
+* sink: 不希望敏感数据到达的地方, 比如网络. 
+* taintdroid使用32位向量表示taint, 用于跟踪32个taint sources
+* 污点的传播方式:
+  * mov dst, src: 污点直接从src传递到dst
+  * union: 比如两个污染源影响同一个变量
+  * native method: 一些native的方法比如arraycopy也能传播污点
+  * IPC消息
+  * 文件
+* 需要标记的污点: 局部变量, 函数参数, 对象实例的成员, 静态类型的成员, 数组
+* 污点的难题: 性能开销大, 误报多, x86指令复杂,很难准确建模
+* implicit flow: 隐式的控制流去影响某些变量的值以达到传播的目的, PC被污染
+
+</details>
+
 ## 相关资源
 
 * [CTF Wiki](https://ctf-wiki.github.io/ctf-wiki/): 起初是X-Man夏令营的几位学员, 由[iromise](https://github.com/iromise)和[40huo](https://github.com/40huo)带头编写的CTF知识维基站点. 我早先学习参与CTF竞赛的时候, CTF一直没有一个系统全面的知识索引. [CTF Wiki](https://ctf-wiki.github.io/ctf-wiki/)的出现能很好地帮助初学者们渡过入门的那道坎. 我也有幸主要编写了Wiki的Reverse篇. 
