@@ -3422,6 +3422,13 @@ DFT需要额外的空间保存数据标签, 另外, 程序本身也需要使用�
 
 </details>
 
+<details> <summary>Day109: 阅读CUPID协同fuzz的论文</summary>
+
+> 传送门: [Cupid: Automatic Fuzzer Selection for Collaborative Fuzzing](https://www.ei.ruhr-uni-bochum.de/media/emma/veroeffentlichungen/2020/09/26/ACSAC20-Cupid_TiM9H07.pdf)
+
+
+</details>
+
 
 ## 相关资源
 
